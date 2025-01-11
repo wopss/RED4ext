@@ -1,6 +1,7 @@
 #include "AssertionFailed.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "stdafx.hpp"
 
@@ -11,7 +12,7 @@ bool isAttached = false;
 
 void _AssertionFailed(const char*, int, const char*, const char*, ...);
 
-Hook<decltype(&_AssertionFailed)> AssertionFailed_fnc(4285205681U, &_AssertionFailed);
+Hook<decltype(&_AssertionFailed)> AssertionFailed_fnc(Hashes::AssertionFailed, &_AssertionFailed);
 
 void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, const char* aMessage, ...)
 {
@@ -69,7 +70,8 @@ bool Hooks::AssertionFailed::Detach()
         return false;
     }
 
-    spdlog::trace("Trying to detach the hook for the assertion failed function at {:#x}...", AssertionFailed_fnc.GetAddress());
+    spdlog::trace("Trying to detach the hook for the assertion failed function at {:#x}...",
+                  AssertionFailed_fnc.GetAddress());
 
     auto result = AssertionFailed_fnc.Detach();
     if (result != NO_ERROR)

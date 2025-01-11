@@ -1,6 +1,7 @@
 #include "Main_Hooks.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "stdafx.hpp"
 
@@ -9,7 +10,7 @@ namespace
 bool isAttached = false;
 
 int WINAPI _Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow);
-Hook<decltype(&_Main)> Main_fnc(240386859ul, &_Main);
+Hook<decltype(&_Main)> Main_fnc(Hashes::Main, &_Main);
 
 int WINAPI _Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {

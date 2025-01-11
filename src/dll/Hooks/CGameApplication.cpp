@@ -1,5 +1,6 @@
 #include "CGameApplication.hpp"
 #include "Addresses.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 
 #include "States/BaseInitializationState.hpp"
@@ -12,7 +13,8 @@ namespace
 bool isAttached = false;
 
 bool _CGameApplication_AddState(RED4ext::CGameApplication* aThis, RED4ext::IGameState* aState);
-Hook<decltype(&_CGameApplication_AddState)> CGameApplication_AddState(0xFBC216B3, &_CGameApplication_AddState);
+Hook<decltype(&_CGameApplication_AddState)> CGameApplication_AddState(Hashes::CGameApplication_AddState,
+                                                                      &_CGameApplication_AddState);
 
 bool _CGameApplication_AddState(RED4ext::CGameApplication* aThis, RED4ext::IGameState* aState)
 {
