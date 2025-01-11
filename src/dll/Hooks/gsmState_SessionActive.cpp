@@ -1,6 +1,7 @@
 #include "gsmState_SessionActive.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "stdafx.hpp"
 
@@ -10,7 +11,7 @@ bool isAttached = false;
 
 void _GsmState_SessionActive_ReportErrorCode(uintptr_t);
 Hook<decltype(&_GsmState_SessionActive_ReportErrorCode)> GsmState_SessionActive_ReportErrorCode(
-    0x7FA31576, &_GsmState_SessionActive_ReportErrorCode);
+    Hashes::GsmState_SessionActive_ReportErrorCode, &_GsmState_SessionActive_ReportErrorCode);
 
 void _GsmState_SessionActive_ReportErrorCode(uintptr_t aThis)
 {

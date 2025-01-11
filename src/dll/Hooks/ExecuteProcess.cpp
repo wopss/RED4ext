@@ -1,6 +1,7 @@
 #include "ExecuteProcess.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "ScriptCompiler/ScriptCompilerSettings.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
@@ -12,7 +13,7 @@ bool isAttached = false;
 
 bool _Global_ExecuteProcess(void* a1, RED4ext::CString& aCommand, FixedWString& aArgs,
                             RED4ext::CString& aCurrentDirectory, char a5);
-Hook<decltype(&_Global_ExecuteProcess)> Global_ExecuteProcess(0x835D1F2F, &_Global_ExecuteProcess);
+Hook<decltype(&_Global_ExecuteProcess)> Global_ExecuteProcess(Hashes::Global_ExecuteProcess, &_Global_ExecuteProcess);
 
 bool _Global_ExecuteProcess(void* a1, RED4ext::CString& aCommand, FixedWString& aArgs,
                             RED4ext::CString& aCurrentDirectory, char a5)

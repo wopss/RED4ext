@@ -1,6 +1,7 @@
 #include "LoadScripts.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
 
@@ -10,7 +11,8 @@ bool isAttached = false;
 
 bool _CBaseEngine_LoadScripts(RED4ext::CBaseEngine* aEngine, const RED4ext::CString& aPath, uint64_t aTimestamp,
                               uint64_t a4);
-Hook<decltype(&_CBaseEngine_LoadScripts)> CBaseEngine_LoadScripts(0xD4CB1D59, &_CBaseEngine_LoadScripts);
+Hook<decltype(&_CBaseEngine_LoadScripts)> CBaseEngine_LoadScripts(Hashes::CBaseEngine_LoadScripts,
+                                                                  &_CBaseEngine_LoadScripts);
 
 bool _CBaseEngine_LoadScripts(RED4ext::CBaseEngine* aEngine, const RED4ext::CString& aPath, uint64_t aTimestamp,
                               uint64_t a4)

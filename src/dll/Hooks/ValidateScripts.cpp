@@ -1,6 +1,7 @@
 #include "ValidateScripts.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "RED4ext/Scripting/ScriptReport.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
@@ -10,7 +11,8 @@ namespace
 bool isAttached = false;
 
 bool _ScriptValidator_Validate(uint64_t self, uint64_t a1, RED4ext::ScriptReport& aReport);
-Hook<decltype(&_ScriptValidator_Validate)> ScriptValidator_Validate(0x359024C2, &_ScriptValidator_Validate);
+Hook<decltype(&_ScriptValidator_Validate)> ScriptValidator_Validate(Hashes::ScriptValidator_Validate,
+                                                                    &_ScriptValidator_Validate);
 
 bool _ScriptValidator_Validate(uint64_t self, uint64_t a1, RED4ext::ScriptReport& aReport)
 {

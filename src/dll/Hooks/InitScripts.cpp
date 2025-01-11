@@ -1,6 +1,7 @@
 #include "InitScripts.hpp"
 #include "Addresses.hpp"
 #include "App.hpp"
+#include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
 
@@ -10,7 +11,8 @@ bool isAttached = false;
 
 void* _CBaseEngine_InitScripts(RED4ext::CBaseEngine* aThis, const RED4ext::CString& aScriptsBlobPath, int8_t a3,
                                int16_t a4);
-Hook<decltype(&_CBaseEngine_InitScripts)> CBaseEngine_InitScripts(0xAB652585, &_CBaseEngine_InitScripts);
+Hook<decltype(&_CBaseEngine_InitScripts)> CBaseEngine_InitScripts(Hashes::CBaseEngine_InitScripts,
+                                                                  &_CBaseEngine_InitScripts);
 
 void* _CBaseEngine_InitScripts(RED4ext::CBaseEngine* aThis, const RED4ext::CString& aScriptsBlobPath, int8_t a3,
                                int16_t a4)
