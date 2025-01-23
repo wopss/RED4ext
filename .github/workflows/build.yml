@@ -87,13 +87,13 @@ jobs:
           Copy-Item -Path ./${{ matrix.config }}/bin/RED4ext.pdb -Destination $packagingDir/red4ext
 
       - name: Upload ZIP
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: red4ext_${{ env.RED4EXT_PRETTY_CONFIG }}_${{ env.RED4EXT_COMMIT_SHA }}
           path: build/_packaging/
 
       - name: Upload ZIP (PDBs)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: red4ext_${{ env.RED4EXT_PRETTY_CONFIG }}_${{ env.RED4EXT_COMMIT_SHA }}_pdbs
           path: build/_packaging_pdbs/
