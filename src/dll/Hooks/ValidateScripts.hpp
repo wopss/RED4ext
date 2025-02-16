@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ScriptValidationError.hpp"
 #include "Systems/PluginSystem.hpp"
 

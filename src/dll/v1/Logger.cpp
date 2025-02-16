@@ -1,11 +1,12 @@
-#include "stdafx.hpp"
 #include "Logger.hpp"
+
 #include "App.hpp"
 
 #define Log(func)                                                                                                      \
+    const auto module = std::bit_cast<HMODULE>(aHandle);                                                               \
     if (!aMessage)                                                                                                     \
     {                                                                                                                  \
-        spdlog::warn("Plugin with handle {} tried to log a message with a NULL message", fmt::ptr(aHandle));           \
+        spdlog::warn("Plugin with handle {} tried to log a message with a NULL message", fmt::ptr(module));            \
         return;                                                                                                        \
     }                                                                                                                  \
                                                                                                                        \
@@ -16,7 +17,7 @@
     }                                                                                                                  \
                                                                                                                        \
     auto pluginSystem = app->GetPluginSystem();                                                                        \
-    auto plugin = pluginSystem->GetPlugin(aHandle);                                                                    \
+    auto plugin = pluginSystem->GetPlugin(module);                                                                     \
     if (!plugin)                                                                                                       \
     {                                                                                                                  \
         return;                                                                                                        \
@@ -25,9 +26,10 @@
     loggerSystem->func(plugin, aMessage)
 
 #define LogF(char_type, count_fn, format_fn, func)                                                                     \
+    const auto module = std::bit_cast<HMODULE>(aHandle);                                                               \
     if (!aFormat)                                                                                                      \
     {                                                                                                                  \
-        spdlog::warn("Plugin with handle {} tried to log a message with a NULL format", fmt::ptr(aHandle));            \
+        spdlog::warn("Plugin with handle {} tried to log a message with a NULL format", fmt::ptr(module));             \
         return;                                                                                                        \
     }                                                                                                                  \
                                                                                                                        \
@@ -38,7 +40,7 @@
     }                                                                                                                  \
                                                                                                                        \
     auto pluginSystem = app->GetPluginSystem();                                                                        \
-    auto plugin = pluginSystem->GetPlugin(aHandle);                                                                    \
+    auto plugin = pluginSystem->GetPlugin(module);                                                                     \
     if (!plugin)                                                                                                       \
     {                                                                                                                  \
         return;                                                                                                        \
@@ -73,122 +75,125 @@
                                                                                                                        \
     va_end(args)
 
-void v0::Logger::Trace(RED4ext::PluginHandle aHandle, const char* aMessage)
+namespace v1
+{
+void Logger::Trace(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Trace);
 }
 
-void v0::Logger::TraceF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void Logger::TraceF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Trace);
 }
 
-void v0::Logger::TraceW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void Logger::TraceW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Trace);
 }
 
-void v0::Logger::TraceWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void Logger::TraceWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Trace);
 }
 
-void v0::Logger::Debug(RED4ext::PluginHandle aHandle, const char* aMessage)
+void Logger::Debug(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Debug);
 }
 
-void v0::Logger::DebugF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void Logger::DebugF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Debug);
 }
 
-void v0::Logger::DebugW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void Logger::DebugW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Debug);
 }
 
-void v0::Logger::DebugWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void Logger::DebugWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Debug);
 }
 
-void v0::Logger::Info(RED4ext::PluginHandle aHandle, const char* aMessage)
+void Logger::Info(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Info);
 }
 
-void v0::Logger::InfoF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void Logger::InfoF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Info);
 }
 
-void v0::Logger::InfoW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void Logger::InfoW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Info);
 }
 
-void v0::Logger::InfoWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void Logger::InfoWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Info);
 }
 
-void v0::Logger::Warn(RED4ext::PluginHandle aHandle, const char* aMessage)
+void Logger::Warn(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Warn);
 }
 
-void v0::Logger::WarnF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void Logger::WarnF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Warn);
 }
 
-void v0::Logger::WarnW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void Logger::WarnW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Warn);
 }
 
-void v0::Logger::WarnWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void Logger::WarnWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Warn);
 }
 
-void v0::Logger::Error(RED4ext::PluginHandle aHandle, const char* aMessage)
+void Logger::Error(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Error);
 }
 
-void v0::Logger::ErrorF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void Logger::ErrorF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Error);
 }
 
-void v0::Logger::ErrorW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void Logger::ErrorW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Error);
 }
 
-void v0::Logger::ErrorWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void Logger::ErrorWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Error);
 }
 
-void v0::Logger::Critical(RED4ext::PluginHandle aHandle, const char* aMessage)
+void Logger::Critical(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Critical);
 }
 
-void v0::Logger::CriticalF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void Logger::CriticalF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Critical);
 }
 
-void v0::Logger::CriticalW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void Logger::CriticalW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Critical);
 }
 
-void v0::Logger::CriticalWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void Logger::CriticalWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Critical);
 }
+} // namespace v1

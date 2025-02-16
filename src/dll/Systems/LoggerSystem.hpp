@@ -1,20 +1,18 @@
 #pragma once
 
-#include <cwctype>
-
 #include "ISystem.hpp"
 #include "PluginBase.hpp"
 #include "Utils.hpp"
 
-class LoggerSystem : public ISystem
+class LoggerSystem final : public ISystem
 {
 public:
     LoggerSystem(const Paths& aPaths, const Config& aConfig, const DevConsole& aDevConsole);
 
-    ESystemType GetType() final;
+    ESystemType GetType() override;
 
-    void Startup() final;
-    void Shutdown() final;
+    void Startup() override;
+    void Shutdown() override;
 
     void RotateLogs(std::vector<std::wstring> plugins) const;
 
@@ -38,8 +36,7 @@ public:
 
 private:
     template<typename T>
-    inline void Log(std::shared_ptr<PluginBase> aPlugin, spdlog::level::level_enum aLevel,
-                    std::basic_string_view<T> aText)
+    void Log(std::shared_ptr<PluginBase> aPlugin, spdlog::level::level_enum aLevel, std::basic_string_view<T> aText)
     {
         if (!aPlugin)
         {

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <scc.h>
 
 namespace Hooks::ExecuteProcess

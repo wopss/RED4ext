@@ -1,4 +1,5 @@
 #pragma once
+
 namespace Hooks::gsmState_SessionActive
 {
 bool Attach();

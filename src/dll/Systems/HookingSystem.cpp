@@ -1,5 +1,5 @@
-#include "stdafx.hpp"
 #include "HookingSystem.hpp"
+
 #include "DetourTransaction.hpp"
 
 ESystemType HookingSystem::GetType()

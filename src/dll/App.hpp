@@ -35,7 +35,7 @@ private:
     bool AttachHooks() const;
 
     template<typename T, typename... Args, typename = std::enable_if_t<std::is_base_of_v<ISystem, T>>>
-    inline void AddSystem(Args&&... args)
+    void AddSystem(Args&&... args)
     {
         m_systems.push_back(std::make_unique<T>(std::forward<Args>(args)...));
         std::sort(m_systems.begin(), m_systems.end(),
