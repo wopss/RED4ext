@@ -19,6 +19,10 @@ The project is using [C++20](https://en.cppreference.com/w/cpp/20), any C++20 fe
 ### General
 
 * Use [EditorConfig](https://editorconfig.org/) and [clang-format](https://clang.llvm.org/docs/ClangFormat.html) to style your code before pushing.
+  * Ideally, set up pre-commit hook using [pre-commit](https://pre-commit.com).
+    All that should be required to set it up is to have [Python 3.x](https://www.python.org/) with [pip](https://pypi.org/project/pip/) installed and run the following command inside of the cloned repository folder: `pip install pre-commit && pre-commit install`
+    * Note that first commit after setting up the hook will take longer as it has to download required packages.
+    * You don't have to run it every single time there is some update, hook is auto-updated after initial installation.
 * Use names that describe the purpose or intent of the object. Names should be self-explanatory and easily recognizable in the context.
 * Minimize the use of abbreviations that would likely be unknown to someone outside of the project.
 * Use `auto` whenever it is possible, if the intended type is the correct one (in case of primitive types).
