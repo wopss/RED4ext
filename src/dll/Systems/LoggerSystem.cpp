@@ -1,7 +1,7 @@
 #include "LoggerSystem.hpp"
+
 #include "Config.hpp"
 #include "Paths.hpp"
-#include "stdafx.hpp"
 
 LoggerSystem::LoggerSystem(const Paths& aPaths, const Config& aConfig, const DevConsole& aDevConsole)
     : m_paths(aPaths)

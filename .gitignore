@@ -364,3 +364,5 @@ FodyWeavers.xsd
 ### Custom ###
 build
 src/dll/Version.hpp
+out
+CMakeSettings.json

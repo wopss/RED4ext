@@ -1,10 +1,12 @@
 #include "PluginSystem.hpp"
+
+#include "App.hpp"
 #include "Image.hpp"
 #include "Utils.hpp"
 #include "Version.hpp"
-#include "v0/Plugin.hpp"
+#include "v1/Plugin.hpp"
 
-#define MINIMUM_API_VERSION RED4EXT_API_VERSION_0
+#define MINIMUM_API_VERSION RED4EXT_API_VERSION_1
 #define LATEST_API_VERSION RED4EXT_API_VERSION_LATEST
 
 #define MINIMUM_SDK_VERSION RED4EXT_SDK_0_5_0
@@ -144,10 +146,18 @@ void PluginSystem::Startup()
         Load(pluginInfo.path, pluginInfo.useAlteredSearchPath);
     }
 
-    // In the case where the exe is hosted, check if the host exe has RED4Ext exports
+    // In the case where the exe is hosted, check if the host exe has RED4Ext exports.
     Load(m_paths.GetExe(), false);
 
     spdlog::info("{} plugin(s) loaded", m_plugins.size());
+
+    // Install CRunningState::OnAfterEnter hook for notifying plugins about entry to Running state.
+    RED4ext::GameState stateHook{.OnAfterEnter = [](RED4ext::CGameApplication&)
+                                 {
+                                     App::Get()->GetPluginSystem()->EnteredRunningState();
+                                     return RED4ext::EGameStateResult::Finished;
+                                 }};
+    App::Get()->GetStateSystem()->AddHook(nullptr, RED4ext::EGameStateType::Running, stateHook);
 }
 
 void PluginSystem::Shutdown()
@@ -166,6 +176,24 @@ void PluginSystem::Shutdown()
     }
 
     spdlog::info("{} plugin(s) unloaded", size);
+}
+
+void PluginSystem::EnteredRunningState() const
+{
+    if (!m_config.isEnabled)
+    {
+        return;
+    }
+
+    auto size = m_plugins.size();
+    spdlog::trace("Notifying {} plugin(s) about entry to Running state...", size);
+
+    for (const auto& plugin : m_plugins | std::views::values)
+    {
+        plugin->Main(RED4ext::EMainReason::Run);
+    }
+
+    spdlog::info("{} plugin(s) notified about entry to Running state", size);
 }
 
 std::shared_ptr<PluginBase> PluginSystem::GetPlugin(HMODULE aModule) const
@@ -190,7 +218,7 @@ std::vector<PluginSystem::PluginName> PluginSystem::GetActivePlugins() const
     std::vector<PluginSystem::PluginName> plugins;
 
     plugins.reserve(m_plugins.size());
-    for (const auto& [handle, plugin] : m_plugins)
+    for (const auto& plugin : m_plugins | std::views::values)
     {
         plugins.emplace_back(plugin->GetName());
     }
@@ -357,9 +385,9 @@ std::shared_ptr<PluginBase> PluginSystem::CreatePlugin(const std::filesystem::pa
 
     switch (apiVersion)
     {
-    case RED4EXT_API_VERSION_0:
+    case RED4EXT_API_VERSION_1:
     {
-        return std::make_shared<v0::Plugin>(aPath, std::move(aModule));
+        return std::make_shared<v1::Plugin>(aPath, std::move(aModule));
     }
     }
 

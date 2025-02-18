@@ -6,20 +6,18 @@ class Paths;
 
 namespace Utils
 {
-std::shared_ptr<spdlog::logger> CreateLogger(const std::wstring_view aLogName, const std::wstring_view aFilename,
+std::shared_ptr<spdlog::logger> CreateLogger(std::wstring_view aLogName, std::wstring_view aFilename,
                                              const Paths& aPaths, const Config& aConfig, const DevConsole& aDevConsole);
-
-std::wstring GetStateName(RED4ext::EGameStateType aStateType);
 
 std::wstring FormatSystemMessage(uint32_t aMessageId);
 std::wstring FormatLastError();
 std::wstring FormatCurrentTimestamp();
 
-int32_t ShowMessageBoxEx(const std::wstring_view aCaption, const std::wstring_view aText, uint32_t aType = MB_OK);
-int32_t ShowMessageBox(const std::wstring_view aText, uint32_t aType = MB_OK);
+int32_t ShowMessageBoxEx(std::wstring_view aCaption, std::wstring_view aText, uint32_t aType = MB_OK);
+int32_t ShowMessageBox(std::wstring_view aText, uint32_t aType = MB_OK);
 
-std::string Narrow(const std::wstring_view aText);
-std::wstring Widen(const std::string_view aText);
+std::string Narrow(std::wstring_view aText);
+std::wstring Widen(std::string_view aText);
 
 std::wstring ToLower(const std::wstring& acText);
 
@@ -56,7 +54,7 @@ struct fmt::formatter<std::filesystem::path, Char> : formatter<basic_string_view
     template<typename FormatContext>
     auto format(const std::filesystem::path& path, FormatContext& ctx)
     {
-        return formatter<basic_string_view<Char>, Char>::format(path.c_str(), ctx);
+        return formatter<basic_string_view<Char>, Char>::format(path.native(), ctx);
     }
 };
 

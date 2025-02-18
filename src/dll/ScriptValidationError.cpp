@@ -1,4 +1,5 @@
 #include "ScriptValidationError.hpp"
+
 #include "App.hpp"
 
 ValidationError ValidationError::FromString(const char* str)
@@ -43,7 +44,7 @@ ValidationError ValidationError::FromString(const char* str)
         type = ValidationErrorType::PropertyTypeMismatch;
     }
 
-    return { .type = type, .name = name, .parent = parent };
+    return {.type = type, .name = name, .parent = parent};
 }
 
 std::optional<SourceRef> ValidationError::GetSourceRef() const

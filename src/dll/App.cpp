@@ -1,10 +1,6 @@
 #include "App.hpp"
-#include "Addresses.hpp"
-#include "DetourTransaction.hpp"
-#include "Image.hpp"
-#include "Utils.hpp"
-#include "Version.hpp"
 
+#include "DetourTransaction.hpp"
 #include "Hooks/AssertionFailed.hpp"
 #include "Hooks/CGameApplication.hpp"
 #include "Hooks/CollectSaveableSystems.hpp"
@@ -14,6 +10,9 @@
 #include "Hooks/Main_Hooks.hpp"
 #include "Hooks/ValidateScripts.hpp"
 #include "Hooks/gsmState_SessionActive.hpp"
+#include "Image.hpp"
+#include "Utils.hpp"
+#include "Version.hpp"
 
 namespace
 {

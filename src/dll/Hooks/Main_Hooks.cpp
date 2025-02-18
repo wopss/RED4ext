@@ -1,9 +1,8 @@
 #include "Main_Hooks.hpp"
-#include "Addresses.hpp"
+
 #include "App.hpp"
 #include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
-#include "stdafx.hpp"
 
 namespace
 {

@@ -3,7 +3,7 @@
 class DetourTransaction
 {
 public:
-    DetourTransaction(const std::source_location aSource = std::source_location::current());
+    DetourTransaction(std::source_location aSource = std::source_location::current());
     ~DetourTransaction();
 
     DetourTransaction(DetourTransaction&) = delete;
@@ -27,7 +27,7 @@ private:
         Failed
     };
 
-    void SetState(const State aState);
+    void SetState(State aState);
     void QueueThreadsForUpdate();
 
     const std::source_location m_source;

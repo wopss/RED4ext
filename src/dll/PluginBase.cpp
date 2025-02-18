@@ -1,6 +1,25 @@
-#include "stdafx.hpp"
 #include "PluginBase.hpp"
+
 #include "Utils.hpp"
+
+namespace
+{
+std::wstring_view GetReasonString(RED4ext::EMainReason aReason)
+{
+    switch (aReason)
+    {
+    case RED4ext::EMainReason::Load:
+        return L"Load";
+    case RED4ext::EMainReason::Unload:
+        return L"Unload";
+    case RED4ext::EMainReason::Run:
+        return L"Run";
+    default:
+        spdlog::error(L"Unknown reason {}", static_cast<std::underlying_type_t<RED4ext::EMainReason>>(aReason));
+        return L"Unknown";
+    }
+}
+} // namespace
 
 PluginBase::PluginBase(const std::filesystem::path& aPath, wil::unique_hmodule aModule)
     : m_path(aPath)
@@ -75,7 +94,7 @@ bool PluginBase::Main(RED4ext::EMainReason aReason)
 {
     const auto module = GetModule();
     const auto name = GetName();
-    const auto reasonStr = aReason == RED4ext::EMainReason::Load ? L"Load" : L"Unload";
+    const auto reasonStr = GetReasonString(aReason);
 
     spdlog::trace(L"Calling 'Main' function exported by '{}' with reason '{}'...", name, reasonStr);
 
@@ -85,7 +104,7 @@ bool PluginBase::Main(RED4ext::EMainReason aReason)
     {
         try
         {
-            auto success = mainFn(module, aReason, GetSdkStruct());
+            auto success = mainFn(std::bit_cast<RED4ext::PluginHandle>(module), aReason, GetSdkStruct());
             if (!success)
             {
                 spdlog::trace(L"'Main' function returned 'false'");
@@ -103,8 +122,9 @@ bool PluginBase::Main(RED4ext::EMainReason aReason)
         }
         catch (...)
         {
-            spdlog::warn(L"An unknown exception occured while calling 'Main' function with reason '{}', exported by '{}'",
-                         reasonStr, name);
+            spdlog::warn(
+                L"An unknown exception occured while calling 'Main' function with reason '{}', exported by '{}'",
+                reasonStr, name);
             return false;
         }
     }

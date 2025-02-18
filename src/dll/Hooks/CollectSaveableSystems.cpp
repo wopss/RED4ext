@@ -1,8 +1,7 @@
 #include "CollectSaveableSystems.hpp"
-#include "Addresses.hpp"
+
 #include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
-#include "stdafx.hpp"
 
 namespace
 {

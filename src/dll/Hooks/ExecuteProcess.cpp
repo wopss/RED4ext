@@ -1,11 +1,12 @@
 #include "ExecuteProcess.hpp"
-#include "Addresses.hpp"
+
 #include "App.hpp"
 #include "Detail/AddressHashes.hpp"
 #include "Hook.hpp"
 #include "ScriptCompiler/ScriptCompilerSettings.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
-#include <windows.h>
+
+#include <Windows.h>
 
 namespace
 {

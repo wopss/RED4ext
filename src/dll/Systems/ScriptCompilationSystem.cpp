@@ -1,4 +1,5 @@
 #include "ScriptCompilationSystem.hpp"
+
 #include "Utils.hpp"
 
 ScriptCompilationSystem::ScriptCompilationSystem(const Paths& aPaths)
@@ -67,13 +68,13 @@ bool ScriptCompilationSystem::Add(std::shared_ptr<PluginBase> aPlugin, const wch
     {
         if (std::filesystem::exists(resolvedPath))
         {
-            spdlog::trace(L"Found absolute path: {}", resolvedPath.wstring().c_str());
+            spdlog::trace(L"Found absolute path: {}", resolvedPath.native().c_str());
             Add(aPlugin, resolvedPath);
             return true;
         }
         else
         {
-            spdlog::error(L"Could not find absolute path: {}", resolvedPath.wstring().c_str());
+            spdlog::error(L"Could not find absolute path: {}", resolvedPath.native().c_str());
             return false;
         }
     }
@@ -82,13 +83,13 @@ bool ScriptCompilationSystem::Add(std::shared_ptr<PluginBase> aPlugin, const wch
         resolvedPath = aPlugin->GetPath().parent_path() / aPath;
         if (std::filesystem::exists(resolvedPath))
         {
-            spdlog::trace(L"Found path relative to plugin: {}", resolvedPath.wstring().c_str());
+            spdlog::trace(L"Found path relative to plugin: {}", resolvedPath.native().c_str());
             Add(aPlugin, resolvedPath);
             return true;
         }
         else
         {
-            spdlog::error(L"Could not find path relative to plugin: {}", resolvedPath.wstring().c_str());
+            spdlog::error(L"Could not find path relative to plugin: {}", resolvedPath.native().c_str());
             return false;
         }
     }
@@ -112,7 +113,7 @@ std::wstring ScriptCompilationSystem::GetCompilationArgs(const FixedWString& aOr
     for (const auto& [plugin, path] : m_scriptPaths)
     {
         spdlog::info(L"{}: '{}'", plugin->GetName(), path);
-        pathsFile << path.wstring() << std::endl;
+        pathsFile << path.native() << std::endl;
     }
     spdlog::info(L"Paths written to: '{}'", pathsFilePath);
     format_to(std::back_inserter(buffer), LR"( -compilePathsFile "{}")", pathsFilePath);

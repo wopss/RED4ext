@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Paths.hpp"
+
 #include <cstdint>
 #include <filesystem>
 #include <unordered_map>
-
-#include "Paths.hpp"
 
 class Addresses
 {

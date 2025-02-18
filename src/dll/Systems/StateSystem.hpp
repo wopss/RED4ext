@@ -1,45 +1,58 @@
 #pragma once
 
 #include "ISystem.hpp"
+
 #include "PluginBase.hpp"
 
-class StateSystem : public ISystem
+class StateSystem final : public ISystem
 {
 public:
-    using Func_t = bool (*)(RED4ext::CGameApplication*);
+    ESystemType GetType() override;
 
-    ESystemType GetType() final;
+    void Startup() override;
+    void Shutdown() override;
 
-    void Startup() final;
-    void Shutdown() final;
+    bool OnChangeState(RED4ext::CGameApplication& aApp, RED4ext::EGameStateType aNextState);
+    bool OnDoState(RED4ext::CGameApplication& aApp);
 
-    bool Add(std::shared_ptr<PluginBase> aPlugin, RED4ext::EGameStateType aStateType, Func_t aOnEnter, Func_t aOnUpdate,
-             Func_t aOnExit);
-
-    bool OnEnter(RED4ext::EGameStateType aStateType, RED4ext::CGameApplication* aApp);
-    bool OnUpdate(RED4ext::EGameStateType aStateType, RED4ext::CGameApplication* aApp);
-    bool OnExit(RED4ext::EGameStateType aStateType, RED4ext::CGameApplication* aApp);
+    bool AddHook(std::shared_ptr<PluginBase> aPlugin, RED4ext::EGameStateType aStateType,
+                 const RED4ext::GameState& aState);
 
 private:
-    struct StateItem
+    struct StateHooks
     {
-        std::shared_ptr<PluginBase> plugin;
-        Func_t func;
+        struct Action
+        {
+            struct Hook
+            {
+                std::shared_ptr<PluginBase> plugin;
+                RED4ext::EGameStateResult (*hook)(RED4ext::CGameApplication&);
+            };
+
+            void Shutdown();
+
+            std::wstring_view name;
+            std::vector<Hook> onBefore;
+            std::vector<Hook> onAfter;
+        };
+
+        void Shutdown();
+
+        Action& GetActionHooksForStatus(RED4ext::EGameStateStatus aStateStatus);
+
+        std::wstring_view name;
+        Action onEnter = {.name = L"Enter"};
+        Action onTick = {.name = L"Tick"};
+        Action onExit = {.name = L"Exit"};
     };
 
-    struct State
-    {
-        std::list<StateItem> onEnter;
-        std::list<StateItem> onUpdate;
-        std::list<StateItem> onExit;
-    };
+    StateHooks& GetStateHooks(RED4ext::EGameStateType aStateType);
 
-    State* GetStateByType(RED4ext::EGameStateType aStateType);
-
-    bool Run(std::wstring_view aAction, std::list<StateItem>& aList, RED4ext::CGameApplication* aApp);
-
-    State m_baseInitialization;
-    State m_initialization;
-    State m_running;
-    State m_shutdown;
+    StateHooks m_baseInitialization = {.name = L"BaseInitialization"};
+    StateHooks m_initialization = {.name = L"Initialization"};
+    StateHooks m_running = {.name = L"Running"};
+    StateHooks m_shutdown = {.name = L"Shutdown"};
+    RED4ext::EGameStateStatus m_nextStateStatus = RED4ext::EGameStateStatus::NextState;
+    bool m_originalStateActionFinished = false;
+    bool m_shouldSwitchState = false;
 };

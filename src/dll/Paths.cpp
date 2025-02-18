@@ -1,4 +1,5 @@
 #include "Paths.hpp"
+
 #include "Utils.hpp"
 
 Paths::Paths()

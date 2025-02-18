@@ -1,5 +1,7 @@
 #pragma once
+
 #include "ScriptCompilerSourceRef.hpp"
+
 #include <scc.h>
 
 class ScriptCompilerOutput

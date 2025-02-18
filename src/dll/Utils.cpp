@@ -1,8 +1,8 @@
 #include "Utils.hpp"
+
 #include "Config.hpp"
 #include "DevConsole.hpp"
 #include "Paths.hpp"
-#include "stdafx.hpp"
 
 #include <ctime>
 #include <cwctype>
@@ -90,34 +90,6 @@ std::shared_ptr<spdlog::logger> Utils::CreateLogger(const std::wstring_view aLog
     }
 
     return nullptr;
-}
-
-std::wstring Utils::GetStateName(RED4ext::EGameStateType aStateType)
-{
-    using enum RED4ext::EGameStateType;
-    switch (aStateType)
-    {
-    case BaseInitialization:
-    {
-        return L"BaseInitialization";
-    }
-    case Initialization:
-    {
-        return L"Initialization";
-    }
-    case Running:
-    {
-        return L"Running";
-    }
-    case Shutdown:
-    {
-        return L"Shutdown";
-    }
-    default:
-    {
-        return L"unknown";
-    }
-    }
 }
 
 std::wstring Utils::FormatSystemMessage(uint32_t aMessageId)

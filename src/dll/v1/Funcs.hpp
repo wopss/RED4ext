@@ -1,6 +1,6 @@
 #pragma once
 
-namespace v0
+namespace v1
 {
 namespace Hooking
 {
@@ -10,7 +10,7 @@ bool Detach(RED4ext::PluginHandle aHandle, void* aTarget);
 
 namespace GameStates
 {
-bool Add(RED4ext::PluginHandle aHandle, RED4ext::EGameStateType aType, RED4ext::GameState* aState);
+bool AddHook(RED4ext::PluginHandle aHandle, RED4ext::EGameStateType aType, const RED4ext::GameState& aState);
 } // namespace GameStates
 
 namespace Scripts
@@ -18,4 +18,4 @@ namespace Scripts
 bool Add(RED4ext::PluginHandle aHandle, const wchar_t* aPath);
 } // namespace Scripts
 
-} // namespace v0
+} // namespace v1

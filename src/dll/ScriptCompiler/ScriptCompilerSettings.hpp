@@ -1,6 +1,8 @@
 #pragma once
+
 #include "ScriptCompilerFailure.hpp"
 #include "ScriptCompilerOutput.hpp"
+
 #include <scc.h>
 
 class ScriptCompilerSettings

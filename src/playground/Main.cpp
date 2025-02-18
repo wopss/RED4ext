@@ -10,6 +10,10 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::PluginHandle aHandle, RED4ext::
     {
         break;
     }
+    case RED4ext::EMainReason::Run:
+    {
+        break;
+    }
     case RED4ext::EMainReason::Unload:
     {
         break;
