@@ -1,0 +1,38 @@
+name: Clang-Format Workflow
+
+on:
+  push:
+    branches: '**'
+  pull_request:
+
+env:
+  LLVM_VERSION: 18
+
+jobs:
+  format:
+    name: Check the formatting
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pin to a specific version
+        run: |
+          $latestChocoVersion = (Resolve-ChocoPackageVersion -PackageName "llvm" -TargetVersion $env:LLVM_VERSION)
+          Install-ChocoPackage -PackageName llvm -ArgumentList '--allow-downgrade', '--version', $latestChocoVersion
+
+      - name: Run clang-format
+        env:
+            RED4EXT_COMMIT_BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}
+            RED4EXT_COMMIT_AFTER: ${{ github.sha }}
+        run: |
+          git `
+            -c core.autocrlf=false `
+            -c core.eol=lf `
+            -c color.ui=always `
+            clang-format `
+              --style file `
+              --diff $env:RED4EXT_COMMIT_BEFORE $env:RED4EXT_COMMIT_AFTER `
