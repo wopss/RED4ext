@@ -1,4 +1,5 @@
 #include "DetourTransaction.hpp"
+
 #include "Utils.hpp"
 
 DetourTransaction::DetourTransaction(const std::source_location aSource)

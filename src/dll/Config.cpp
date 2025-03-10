@@ -1,5 +1,5 @@
-#include "stdafx.hpp"
 #include "Config.hpp"
+
 #include "Utils.hpp"
 
 #define DEFAULT_TOML_EXCEPTION_MSG L"An exception occured while parsing the config file:\n\n{}\n\nFile: {}"

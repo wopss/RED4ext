@@ -122,7 +122,6 @@ void Addresses::LoadAddresses(const std::filesystem::path& aPath)
             m_addresses.emplace(static_cast<std::uint32_t>(hash), address);
         }
     }
-    
 
     spdlog::info("{} game addresses loaded", m_addresses.size());
 }

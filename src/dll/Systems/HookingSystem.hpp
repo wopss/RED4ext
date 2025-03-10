@@ -4,13 +4,13 @@
 #include "ISystem.hpp"
 #include "PluginBase.hpp"
 
-class HookingSystem : public ISystem
+class HookingSystem final : public ISystem
 {
 public:
-    ESystemType GetType() final;
+    ESystemType GetType() override;
 
-    void Startup() final;
-    void Shutdown() final;
+    void Startup() override;
+    void Shutdown() override;
 
     bool Attach(std::shared_ptr<PluginBase> aPlugin, void* aTarget, void* aDetour, void** aOriginal);
     bool Detach(std::shared_ptr<PluginBase> aPlugin, void* aTarget);

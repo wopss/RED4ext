@@ -1,4 +1,5 @@
 #include "DevConsole.hpp"
+
 #include "Utils.hpp"
 
 DevConsole::DevConsole(const Config::DevConfig& aConfig)

@@ -1,4 +1,5 @@
 #include "MemoryProtection.hpp"
+
 #include "Utils.hpp"
 
 MemoryProtection::MemoryProtection(void* aAddress, size_t aSize, uint32_t aProtection)

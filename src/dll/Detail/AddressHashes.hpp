@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstdint>
 
 namespace Hashes
@@ -9,6 +10,8 @@ constexpr std::uint32_t CBaseEngine_InitScripts = 2875532677UL;
 constexpr std::uint32_t CBaseEngine_LoadScripts = 3570081113UL;
 
 constexpr std::uint32_t CGameApplication_AddState = 4223801011UL;
+constexpr std::uint32_t CGameApplication_ChangeState = 2242385233UL;
+constexpr std::uint32_t CGameApplication_DoState = 804916828UL;
 
 constexpr std::uint32_t GameInstance_CollectSaveableSystems = 3230163856ul;
 constexpr std::uint32_t Global_ExecuteProcess = 2203918127UL;

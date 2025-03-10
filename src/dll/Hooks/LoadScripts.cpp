@@ -1,4 +1,5 @@
 #include "LoadScripts.hpp"
+
 #include "Addresses.hpp"
 #include "App.hpp"
 #include "Detail/AddressHashes.hpp"

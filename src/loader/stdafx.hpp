@@ -7,6 +7,7 @@
 
 #include <ShlObj_core.h>
 #include <mmsystem.h>
+
 #include <mmddk.h>
 
 #include <wil/resource.h>

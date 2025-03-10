@@ -13,7 +13,7 @@ struct FixedWString
     const wchar_t* str;
 };
 
-class ScriptCompilationSystem : public ISystem
+class ScriptCompilationSystem final : public ISystem
 {
     using Map_t = std::unordered_multimap<std::shared_ptr<PluginBase>, std::filesystem::path>;
     using MapIter_t = Map_t::iterator;
@@ -21,10 +21,10 @@ class ScriptCompilationSystem : public ISystem
 public:
     ScriptCompilationSystem(const Paths& aPaths);
 
-    ESystemType GetType() final;
+    ESystemType GetType() override;
 
-    void Startup() final;
-    void Shutdown() final;
+    void Startup() override;
+    void Shutdown() override;
 
     bool Add(std::shared_ptr<PluginBase> aPlugin, const wchar_t* aPath);
 
