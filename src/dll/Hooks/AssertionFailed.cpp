@@ -39,7 +39,18 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
 
     spdlog::error("------------");
     spdlog::details::registry::instance().flush_all();
-    AssertionFailed_fnc(aFile, aLineNum, aCondition, formatStringBuffer);
+
+    if (aMessage)
+    {
+        // We did format into buffer and thus it's all good
+        AssertionFailed_fnc(aFile, aLineNum, aCondition, formatStringBuffer);
+    }
+    else
+    {
+        // Note: maybe pass nullptr instead?
+        AssertionFailed_fnc(aFile, aLineNum, aCondition, "<empty>");
+    }
+
     va_end(args);
 }
 } // namespace
