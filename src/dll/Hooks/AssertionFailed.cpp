@@ -24,22 +24,22 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
     spdlog::error("File: {}", aFile);
     spdlog::error("Line: {}", aLineNum);
 
+    // Size limit defined by the game.
+    char formatStringBuffer[0x400];
+
     if (aCondition)
     {
         spdlog::error("Condition: {}", aCondition);
     }
     if (aMessage)
     {
-        // Size limit defined by the game.
-        char buffer[0x400];
-
-        vsprintf_s(buffer, aMessage, args);
-        spdlog::error("Message: {}", buffer);
+        vsprintf_s(formatStringBuffer, aMessage, args);
+        spdlog::error("Message: {}", formatStringBuffer);
     }
 
     spdlog::error("------------");
     spdlog::details::registry::instance().flush_all();
-    AssertionFailed_fnc(aFile, aLineNum, aCondition, aMessage, args);
+    AssertionFailed_fnc(aFile, aLineNum, aCondition, formatStringBuffer);
     va_end(args);
 }
 } // namespace
