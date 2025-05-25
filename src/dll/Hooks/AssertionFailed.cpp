@@ -25,7 +25,7 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
     spdlog::error("Line: {}", aLineNum);
 
     // Size limit defined by the game.
-    char formatStringBuffer[0x400];
+    char msg[0x400] = "<empty (RED4ext)>";
 
     if (aCondition)
     {
@@ -33,23 +33,14 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
     }
     if (aMessage)
     {
-        vsprintf_s(formatStringBuffer, aMessage, args);
-        spdlog::error("Message: {}", formatStringBuffer);
+        vsprintf_s(msg, aMessage, args);
+        spdlog::error("Message: {}", msg);
     }
 
     spdlog::error("------------");
     spdlog::details::registry::instance().flush_all();
 
-    if (aMessage)
-    {
-        // We did format into buffer and thus it's all good
-        AssertionFailed_fnc(aFile, aLineNum, aCondition, formatStringBuffer);
-    }
-    else
-    {
-        // Note: maybe pass nullptr instead?
-        AssertionFailed_fnc(aFile, aLineNum, aCondition, "<empty>");
-    }
+    AssertionFailed_fnc(aFile, aLineNum, aCondition, msg);
 
     va_end(args);
 }
