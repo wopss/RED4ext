@@ -89,10 +89,9 @@ App::App()
     spdlog::info("File version: {}.{}.{}.{}", fileVer.major, fileVer.minor, fileVer.build, fileVer.revision);
 
     auto minimumVersion = RED4EXT_RUNTIME_2_30;
-    if (fileVer < minimumVersion)
+    if (fileVer < RED4EXT_RUNTIME_2_30)
     {
-        spdlog::error(L"To use this version of RED4ext, ensure your game is updated to patch {} or newer",
-                      std::to_wstring(minimumVersion));
+        spdlog::error(L"To use this version of RED4ext, ensure your game is updated to patch 2.3 or newer");
         return;
     }
 
