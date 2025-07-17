@@ -16,9 +16,6 @@ Hook<decltype(&_AssertionFailed)> AssertionFailed_fnc(Hashes::AssertionFailed, &
 
 void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, const char* aMessage, ...)
 {
-    va_list args;
-
-    va_start(args, aMessage);
     spdlog::error("Crash report");
     spdlog::error("------------");
     spdlog::error("File: {}", aFile);
@@ -33,16 +30,19 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
     }
     if (aMessage)
     {
-        vsprintf_s(msg, aMessage, args);
+        va_list args;
+        va_start(args, aMessage);
+
+        vsnprintf_s(msg, 0x400, aMessage, args);
         spdlog::error("Message: {}", msg);
+
+        va_end(args);
     }
 
     spdlog::error("------------");
     spdlog::details::registry::instance().flush_all();
 
     AssertionFailed_fnc(aFile, aLineNum, aCondition, msg);
-
-    va_end(args);
 }
 } // namespace
 
