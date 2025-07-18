@@ -33,7 +33,7 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
         va_list args;
         va_start(args, aMessage);
 
-        vsnprintf_s(msg, 0x400, aMessage, args);
+        vsnprintf_s(msg, sizeof(msg), aMessage, args);
         spdlog::error("Message: {}", msg);
 
         va_end(args);
