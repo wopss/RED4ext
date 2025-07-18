@@ -22,7 +22,7 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
     spdlog::error("Line: {}", aLineNum);
 
     // Size limit defined by the game.
-    char msg[0x400] = "<empty (RED4ext)>";
+    char msg[0x400] = "<not supplied>";
 
     if (aCondition)
     {
