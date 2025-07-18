@@ -16,13 +16,13 @@ Hook<decltype(&_AssertionFailed)> AssertionFailed_fnc(Hashes::AssertionFailed, &
 
 void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, const char* aMessage, ...)
 {
-    va_list args;
-
-    va_start(args, aMessage);
     spdlog::error("Crash report");
     spdlog::error("------------");
     spdlog::error("File: {}", aFile);
     spdlog::error("Line: {}", aLineNum);
+
+    // Size limit defined by the game.
+    char msg[0x400] = "<not supplied>";
 
     if (aCondition)
     {
@@ -30,17 +30,19 @@ void _AssertionFailed(const char* aFile, int aLineNum, const char* aCondition, c
     }
     if (aMessage)
     {
-        // Size limit defined by the game.
-        char buffer[0x400];
+        va_list args;
+        va_start(args, aMessage);
 
-        vsprintf_s(buffer, aMessage, args);
-        spdlog::error("Message: {}", buffer);
+        vsnprintf_s(msg, sizeof(msg), aMessage, args);
+        spdlog::error("Message: {}", msg);
+
+        va_end(args);
     }
 
     spdlog::error("------------");
     spdlog::details::registry::instance().flush_all();
-    AssertionFailed_fnc(aFile, aLineNum, aCondition, aMessage, args);
-    va_end(args);
+
+    AssertionFailed_fnc(aFile, aLineNum, aCondition, msg);
 }
 } // namespace
 
