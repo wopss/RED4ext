@@ -30,6 +30,18 @@ ScriptCompilerSettings* ScriptCompilerSettings::SetOutputCacheFile(std::filesyst
     return this;
 }
 
+ScriptCompilerSettings* ScriptCompilerSettings::RegisterNeverRefType(std::string aType)
+{
+    m_neverRefTypes.emplace_back(std::move(aType));
+    return this;
+}
+
+ScriptCompilerSettings* ScriptCompilerSettings::RegisterMixedRefType(std::string aType)
+{
+    m_mixedRefTypes.emplace_back(std::move(aType));
+    return this;
+}
+
 ScriptCompilerSettings::Result ScriptCompilerSettings::Compile()
 {
     auto r6PathStr = m_r6Path.u8string();
@@ -51,6 +63,28 @@ ScriptCompilerSettings::Result ScriptCompilerSettings::Compile()
     {
         auto pathStr = path.u8string();
         m_scc.settings_add_script_path(settings, reinterpret_cast<const char*>(pathStr.c_str()));
+    }
+
+    const auto registerNeverRefType = m_scc.settings_register_never_ref_type;
+    // Only configure never ref types when the compiler supports it.
+    if (registerNeverRefType)
+    {
+        for (const auto& type : m_neverRefTypes)
+        {
+            auto typeStr = type.c_str();
+            registerNeverRefType(settings, typeStr);
+        }
+    }
+
+    const auto registerMixedRefType = m_scc.settings_register_mixed_ref_type;
+    // Only configure mixed ref types when the compiler supports it.
+    if (registerMixedRefType)
+    {
+        for (const auto& type : m_mixedRefTypes)
+        {
+            auto typeStr = type.c_str();
+            registerMixedRefType(settings, typeStr);
+        }
     }
 
     auto result = m_scc.compile(settings);

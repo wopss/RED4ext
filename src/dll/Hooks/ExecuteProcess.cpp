@@ -114,6 +114,16 @@ bool ExecuteScc(SccApi& scc)
         settings.AddScriptPath(path);
     }
 
+    for (const auto& type : scriptSystem->GetNeverRefTypes())
+    {
+        settings.RegisterNeverRefType(type);
+    }
+
+    for (const auto& type : scriptSystem->GetMixedRefTypes())
+    {
+        settings.RegisterMixedRefType(type);
+    }
+
     const auto result = settings.Compile();
 
     if (const auto error = std::get_if<ScriptCompilerFailure>(&result))
