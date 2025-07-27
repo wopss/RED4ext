@@ -127,3 +127,29 @@ bool v0::Scripts::Add(RED4ext::PluginHandle aHandle, const wchar_t* aPath)
     auto scriptCompilationSystem = app->GetScriptCompilationSystem();
     return scriptCompilationSystem->Add(plugin, aPath);
 }
+
+bool v0::Scripts::RegisterNeverRefType(const char* aType)
+{
+    auto app = App::Get();
+    if (!app)
+    {
+        return false;
+    }
+
+    auto scriptCompilationSystem = app->GetScriptCompilationSystem();
+    scriptCompilationSystem->RegisterNeverRefType(aType);
+    return true;
+}
+
+bool v0::Scripts::RegisterMixedRefType(const char* aType)
+{
+    auto app = App::Get();
+    if (!app)
+    {
+        return false;
+    }
+
+    auto scriptCompilationSystem = app->GetScriptCompilationSystem();
+    scriptCompilationSystem->RegisterMixedRefType(aType);
+    return true;
+}
