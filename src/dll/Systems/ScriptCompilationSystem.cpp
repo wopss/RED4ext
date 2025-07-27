@@ -59,6 +59,26 @@ bool ScriptCompilationSystem::HasModdedScriptsBlob() const
     return m_hasModdedScriptsBlob;
 }
 
+void ScriptCompilationSystem::RegisterNeverRefType(std::string aType)
+{
+    m_neverRefTypes.emplace_back(std::move(aType));
+}
+
+const std::vector<std::string>& ScriptCompilationSystem::GetNeverRefTypes() const
+{
+    return m_neverRefTypes;
+}
+
+void ScriptCompilationSystem::RegisterMixedRefType(std::string aType)
+{
+    m_mixedRefTypes.emplace_back(std::move(aType));
+}
+
+const std::vector<std::string>& ScriptCompilationSystem::GetMixedRefTypes() const
+{
+    return m_mixedRefTypes;
+}
+
 bool ScriptCompilationSystem::Add(std::shared_ptr<PluginBase> aPlugin, const wchar_t* aPath)
 {
     spdlog::trace(L"Adding path to script compilation: '{}'", aPath);

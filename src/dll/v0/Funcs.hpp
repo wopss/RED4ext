@@ -16,6 +16,8 @@ bool Add(RED4ext::PluginHandle aHandle, RED4ext::EGameStateType aType, RED4ext::
 namespace Scripts
 {
 bool Add(RED4ext::PluginHandle aHandle, const wchar_t* aPath);
+bool RegisterNeverRefType(const char* aType);
+bool RegisterMixedRefType(const char* aType);
 } // namespace Scripts
 
 } // namespace v0

@@ -36,6 +36,12 @@ public:
     const std::filesystem::path& GetModdedScriptsBlob() const;
     bool HasModdedScriptsBlob() const;
 
+    void RegisterNeverRefType(std::string aType);
+    const std::vector<std::string>& GetNeverRefTypes() const;
+
+    void RegisterMixedRefType(std::string aType);
+    const std::vector<std::string>& GetMixedRefTypes() const;
+
     std::wstring GetCompilationArgs(const FixedWString& aOriginal);
     const Map_t& GetScriptPaths() const;
 
@@ -53,4 +59,6 @@ private:
     bool m_hasModdedScriptsBlob;
     std::filesystem::path m_moddedScriptsBlobPath;
     SourceRefRepository m_sourceRefs;
+    std::vector<std::string> m_neverRefTypes;
+    std::vector<std::string> m_mixedRefTypes;
 };
