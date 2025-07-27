@@ -51,8 +51,8 @@ v0::Plugin::Plugin(const std::filesystem::path& aPath, wil::unique_hmodule aModu
     m_gameStates.Add = v0::GameStates::Add;
 
     m_scripts.Add = v0::Scripts::Add;
-    // m_scripts.RegisterNeverRefType = v0::Scripts::RegisterNeverRefType;
-    // m_scripts.RegisterMixedRefType = v0::Scripts::RegisterMixedRefType;
+    m_scripts.RegisterNeverRefType = v0::Scripts::RegisterNeverRefType;
+    m_scripts.RegisterMixedRefType = v0::Scripts::RegisterMixedRefType;
 }
 
 const uint32_t v0::Plugin::GetApiVersion() const
