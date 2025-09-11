@@ -17,7 +17,7 @@ Image::Image()
     auto size = GetFileVersionInfoSize(fileName.c_str(), nullptr);
     if (!size)
     {
-        if (GetLastError() != ERROR_RESOURCE_TYPE_NOT_FOUND)
+        if (GetLastError() != ERROR_RESOURCE_DATA_NOT_FOUND)
         {
             SHOW_LAST_ERROR_MESSAGE_FILE_LINE(L"Could not retrieve version info size.\n\nFile name: {}", fileName);
         }
