@@ -107,7 +107,7 @@ jobs:
           append_body: true
           body: |
 
-            ### SHA256 Hashes of the release artifacts
+            ## SHA256 Hashes of the release artifacts
 
             - red4ext_${{ env.RED4EXT_VERSION }}.zip
               - ${{ env.RED4EXT_SHA256 }}
