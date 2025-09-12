@@ -17,13 +17,14 @@ Image::Image()
     auto size = GetFileVersionInfoSize(fileName.c_str(), nullptr);
     if (!size)
     {
-        if (GetLastError() != ERROR_RESOURCE_DATA_NOT_FOUND)
+        auto lastError = GetLastError();
+        if (lastError == ERROR_RESOURCE_DATA_NOT_FOUND || lastError == ERROR_RESOURCE_TYPE_NOT_FOUND)
         {
-            SHOW_LAST_ERROR_MESSAGE_FILE_LINE(L"Could not retrieve version info size.\n\nFile name: {}", fileName);
+            // Fail silently, executables might not have the version information.
+            return;
         }
 
-        // Else, fail silently, executables might not have the version information.
-        return;
+        SHOW_LAST_ERROR_MESSAGE_FILE_LINE(L"Could not retrieve version info size.\n\nFile name: {}", fileName);
     }
 
     std::unique_ptr<uint8_t[]> data(new (std::nothrow) uint8_t[size]());
