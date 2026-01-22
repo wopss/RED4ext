@@ -36,6 +36,13 @@ BOOL APIENTRY DllMain(HMODULE aModule, DWORD aReason, LPVOID aReserved)
     }
     case DLL_PROCESS_DETACH:
     {
+        if (aReserved != nullptr)
+        {
+            // DLL is being unloaded due to process termination, skip cleanup.
+            // https://learn.microsoft.com/en-us/windows/win32/dlls/dllmain
+            break;
+        }
+
         try
         {
             const auto image = Image::Get();
