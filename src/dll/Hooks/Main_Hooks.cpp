@@ -31,21 +31,6 @@ int WINAPI _Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, i
 
     auto result = Main_fnc(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 
-    try
-    {
-        auto app = App::Get();
-        app->Shutdown();
-    }
-    catch (const std::exception& e)
-    {
-        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An exception occurred while RED4ext was shutting down.\n\n{}",
-                                            Utils::Widen(e.what()));
-    }
-    catch (...)
-    {
-        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An unknown exception occurred while RED4ext was shutting down.");
-    }
-
     return result;
 }
 } // namespace

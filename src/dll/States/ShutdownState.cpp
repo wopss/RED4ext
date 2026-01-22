@@ -1,7 +1,13 @@
-#include "stdafx.hpp"
 #include "ShutdownState.hpp"
 #include "App.hpp"
 #include "GameStateHook.hpp"
+#include "Systems/StateSystem.hpp"
+#include "Utils.hpp"
+
+#include <RED4ext/GameApplication.hpp>
+#include <RED4ext/GameStates.hpp>
+
+#include <exception>
 
 namespace
 {
@@ -42,11 +48,27 @@ bool States::ShutdownState::OnUpdate(RED4ext::CShutdownState* aThis, RED4ext::CG
 
 bool States::ShutdownState::OnExit(RED4ext::CShutdownState* aThis, RED4ext::CGameApplication* aApp)
 {
-    auto app = App::Get();
-    auto stateSystem = app->GetStateSystem();
+    App* app = App::Get();
+    StateSystem* stateSystem = app->GetStateSystem();
 
     stateSystem->OnExit(RED4ext::EGameStateType::Shutdown, aApp);
-    return CShutdownState.OnExit(aThis, aApp);
+    const bool result = CShutdownState.OnExit(aThis, aApp);
+
+    try
+    {
+        app->Shutdown();
+    }
+    catch (const std::exception& e)
+    {
+        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An exception occurred while RED4ext was shutting down.\n\n{}",
+                                            Utils::Widen(e.what()));
+    }
+    catch (...)
+    {
+        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An unknown exception occurred while RED4ext was shutting down.");
+    }
+
+    return result;
 }
 
 bool States::ShutdownState::Attach(RED4ext::CShutdownState* aState)
