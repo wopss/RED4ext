@@ -85,12 +85,21 @@ bool DetourTransaction::Commit()
         return false;
     }
 
-    QueueThreadsForUpdate();
+    if (!QueueThreadsForUpdate())
+    {
+        spdlog::error("Cannot continue with committing the transaction due to failure in queuing threads for update");
+        Abort();
+
+        return false;
+    }
 
     auto result = DetourTransactionCommit();
     if (result != NO_ERROR)
     {
+        // Detours already aborts the transaction if commit fails.
+        SetState(State::Aborted);
         spdlog::error("Could not commit the transaction. Detours error code: {}", result);
+
         return false;
     }
 
@@ -149,7 +158,7 @@ bool DetourTransaction::Abort()
     return true;
 }
 
-void DetourTransaction::QueueThreadsForUpdate()
+bool DetourTransaction::QueueThreadsForUpdate()
 {
     spdlog::trace("Queueing threads for detour update...");
 
@@ -181,7 +190,32 @@ void DetourTransaction::QueueThreadsForUpdate()
         closePrevThread = true;
 
         const DWORD threadId = GetThreadId(thread);
+        if (threadId == 0)
+        {
+            auto lastError = GetLastError();
+            spdlog::warn("Could not get thread ID. handle: {}, lastError: {}", thread, lastError);
+
+            continue;
+        }
+
         if (threadId == currentThreadId)
+        {
+            continue;
+        }
+
+        // https://ntdoc.m417z.com/threadinfoclass.
+        static constexpr THREADINFOCLASS ThreadIsTerminated = (THREADINFOCLASS)0x14;
+
+        BOOL isTerminated = FALSE;
+        status = NtQueryInformationThread(thread, ThreadIsTerminated, &isTerminated, sizeof(isTerminated), nullptr);
+        if (!NT_SUCCESS(status))
+        {
+            spdlog::warn("Could not query thread information. threadId: {}, handle: {}, status: {}", threadId, thread,
+                         status);
+            continue;
+        }
+
+        if (isTerminated)
         {
             continue;
         }
@@ -194,13 +228,14 @@ void DetourTransaction::QueueThreadsForUpdate()
         }
         else
         {
-            spdlog::warn("Could not queue the thread for update. The transaction will continue but unexpected behavior "
-                         "might happen. threadId: {}, handle: {}, error code: {}",
-                         threadId, thread, result);
+            spdlog::warn("Could not queue the thread for update. threadId: {}, handle: {}, error code: {}", threadId,
+                         thread, result);
+            return false;
         }
     }
 
     spdlog::trace("{} thread(s) queued for detour update (excl. current thread)", m_handles.size());
+    return true;
 }
 
 void DetourTransaction::SetState(const State aState)
