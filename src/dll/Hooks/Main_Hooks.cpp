@@ -29,9 +29,7 @@ int WINAPI _Main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, i
         SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An unknown exception occurred while RED4ext was starting up.");
     }
 
-    auto result = Main_fnc(hInstance, hPrevInstance, pCmdLine, nCmdShow);
-
-    return result;
+    return Main_fnc(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
 } // namespace
 
