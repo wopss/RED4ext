@@ -5,8 +5,19 @@ option(SPDLOG_NO_THREAD_ID "" ON)
 option(SPDLOG_WCHAR_FILENAMES "" ON)
 option(SPDLOG_WCHAR_SUPPORT "" ON)
 
-add_subdirectory(deps/spdlog)
-set_target_properties(spdlog PROPERTIES FOLDER "Dependencies")
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY  https://github.com/gabime/spdlog.git
+  GIT_TAG         v1.12.0
+  GIT_SHALLOW     ON
+)
+FetchContent_MakeAvailable(spdlog)
+
+set_target_properties(
+  spdlog
+    PROPERTIES
+      FOLDER "Dependencies"
+)
 
 mark_as_advanced(
   SPDLOG_BUILD_ALL

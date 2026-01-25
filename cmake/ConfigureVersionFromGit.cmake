@@ -1,12 +1,12 @@
-function(configure_version_from_git)
+function(red4ext_configure_version_from_git)
   find_package(Git)
 
-  __git_set_default_version_variables()
+  __red4ext_git_set_default_version_variables()
 
   if(GIT_FOUND)
-    __git_check_if_valid_repository("${GIT_EXECUTABLE}")
+    __red4ext_git_check_if_valid_repository("${GIT_EXECUTABLE}")
     if(${GIT_IS_VALID_REPOSITORY})
-      __git_get_latest_tag("${GIT_EXECUTABLE}")
+      __red4ext_git_get_latest_tag("${GIT_EXECUTABLE}")
       if(GIT_LATEST_TAG)
         # Split the version into parts.
         string(REGEX MATCHALL "([0-9]+).([0-9]+).([0-9]+)-?(.*)?" GIT_LATEST_TAG_MATCHES "${GIT_LATEST_TAG}")
@@ -17,44 +17,44 @@ function(configure_version_from_git)
         set(GIT_VERSION_PRERELEASE ${CMAKE_MATCH_4})
       endif()
 
-      __git_get_latest_commit("${GIT_EXECUTABLE}")
+      __red4ext_git_get_latest_commit("${GIT_EXECUTABLE}")
       if(GIT_COMMIT_SHA)
         list(PREPEND GIT_VERSION_METADATA ${GIT_COMMIT_SHA})
 
         if(GIT_LATEST_TAG)
-          __git_get_commit_count_since_tag("${GIT_EXECUTABLE}" "${GIT_LATEST_TAG}")
+          __red4ext_git_get_commit_count_since_tag("${GIT_EXECUTABLE}" "${GIT_LATEST_TAG}")
           if(GIT_COMMIT_COUNT_SINCE_TAG GREATER 0)
             list(PREPEND GIT_VERSION_METADATA ${GIT_COMMIT_COUNT_SINCE_TAG})
           endif()
         endif()
 
-        __git_get_branch("${GIT_EXECUTABLE}")
+        __red4ext_git_get_branch("${GIT_EXECUTABLE}")
         list(PREPEND GIT_VERSION_METADATA "${GIT_BRANCH}")
       endif()
     endif()
   endif()
 
   # Create the version string containing metadata, if necessary.
-  set(GIT_VERSION_STR_FULL "${GIT_VERSION_MAJOR}.${GIT_VERSION_MINOR}.${GIT_VERSION_PATCH}")
+  set(GIT_VERSION "${GIT_VERSION_MAJOR}.${GIT_VERSION_MINOR}.${GIT_VERSION_PATCH}")
 
   if(GIT_VERSION_PRERELEASE)
-    string(APPEND GIT_VERSION_STR_FULL "-${GIT_VERSION_PRERELEASE}")
+    string(APPEND GIT_VERSION "-${GIT_VERSION_PRERELEASE}")
   endif()
 
-  if(NOT RED4EXT_IS_CI_RELEASE AND GIT_VERSION_METADATA)
+  if((NOT DEFINED RED4EXT_GIT_METADATA OR RED4EXT_GIT_METADATA) AND GIT_VERSION_METADATA)
     string(JOIN "." GIT_VERSION_METADATA ${GIT_VERSION_METADATA})
-    string(APPEND GIT_VERSION_STR_FULL "+${GIT_VERSION_METADATA}")
+    string(APPEND GIT_VERSION "+${GIT_VERSION_METADATA}")
   endif()
 
   # Set the variable so that they will be available in the parent scope.
-  set(GIT_VERSION_MAJOR ${GIT_VERSION_MAJOR} PARENT_SCOPE)
-  set(GIT_VERSION_MINOR ${GIT_VERSION_MINOR} PARENT_SCOPE)
-  set(GIT_VERSION_PATCH ${GIT_VERSION_PATCH} PARENT_SCOPE)
-  set(GIT_VERSION_PRERELEASE ${GIT_VERSION_PRERELEASE} PARENT_SCOPE)
-  set(GIT_VERSION_STR_FULL ${GIT_VERSION_STR_FULL} PARENT_SCOPE)
+  set(RED4EXT_GIT_VERSION_MAJOR ${GIT_VERSION_MAJOR} PARENT_SCOPE)
+  set(RED4EXT_GIT_VERSION_MINOR ${GIT_VERSION_MINOR} PARENT_SCOPE)
+  set(RED4EXT_GIT_VERSION_PATCH ${GIT_VERSION_PATCH} PARENT_SCOPE)
+  set(RED4EXT_GIT_VERSION_PRERELEASE ${GIT_VERSION_PRERELEASE} PARENT_SCOPE)
+  set(RED4EXT_GIT_VERSION "${GIT_VERSION}" PARENT_SCOPE)
 endfunction()
 
-function(__git_set_default_version_variables)
+function(__red4ext_git_set_default_version_variables)
   set(GIT_VERSION_MAJOR 0 PARENT_SCOPE)
   set(GIT_VERSION_MINOR 0 PARENT_SCOPE)
   set(GIT_VERSION_PATCH 0 PARENT_SCOPE)
@@ -65,7 +65,7 @@ function(__git_set_default_version_variables)
   set(GIT_VERSION_METADATA ${GIT_VERSION_METADATA} PARENT_SCOPE)
 endfunction()
 
-function(__git_check_if_valid_repository GIT_EXECUTABLE)
+function(__red4ext_git_check_if_valid_repository GIT_EXECUTABLE)
   execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --is-inside-work-tree
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   OUTPUT_VARIABLE CMD_STDOUT
@@ -80,7 +80,7 @@ function(__git_check_if_valid_repository GIT_EXECUTABLE)
   endif()
 endfunction()
 
-function(__git_get_latest_tag GIT_EXECUTABLE)
+function(__red4ext_git_get_latest_tag GIT_EXECUTABLE)
   execute_process(COMMAND "${GIT_EXECUTABLE}" tag --sort -version:refname
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   OUTPUT_VARIABLE GIT_TAGS
@@ -101,7 +101,7 @@ function(__git_get_latest_tag GIT_EXECUTABLE)
   endif()
 endfunction()
 
-function(__git_get_latest_commit GIT_EXECUTABLE)
+function(__red4ext_git_get_latest_commit GIT_EXECUTABLE)
   execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   OUTPUT_VARIABLE GIT_COMMIT_SHA
@@ -112,7 +112,7 @@ function(__git_get_latest_commit GIT_EXECUTABLE)
   set(GIT_COMMIT_SHA ${GIT_COMMIT_SHA} PARENT_SCOPE)
 endfunction()
 
-function(__git_get_branch GIT_EXECUTABLE)
+function(__red4ext_git_get_branch GIT_EXECUTABLE)
   execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --abbrev-ref HEAD
                   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                   OUTPUT_VARIABLE GIT_BRANCH
@@ -123,7 +123,7 @@ function(__git_get_branch GIT_EXECUTABLE)
   set(GIT_BRANCH ${GIT_BRANCH} PARENT_SCOPE)
 endfunction()
 
-function(__git_get_commit_count_since_tag GIT_EXECUTABLE GIT_TAG)
+function(__red4ext_git_get_commit_count_since_tag GIT_EXECUTABLE GIT_TAG)
     execute_process(COMMAND "${GIT_EXECUTABLE}" rev-list --count ${GIT_TAG}..HEAD
                     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
                     OUTPUT_VARIABLE GIT_COMMIT_COUNT_SINCE_TAG

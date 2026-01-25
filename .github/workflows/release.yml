@@ -31,7 +31,7 @@ jobs:
         working-directory: build
         run: |
           cmake `
-            -DRED4EXT_IS_CI_RELEASE=YES `
+            -DRED4EXT_GIT_METADATA=YES `
             ${{ github.workspace }}
 
       - name: Build

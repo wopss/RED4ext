@@ -1,4 +1,4 @@
-function(target_output_directory TARGET DIRECTORY)
+function(red4ext_target_output_directory TARGET DIRECTORY)
  foreach(CONFIGURATION ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${CONFIGURATION} CONFIGURATION_UPPER)
 
