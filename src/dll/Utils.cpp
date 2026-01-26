@@ -2,7 +2,6 @@
 #include "Config.hpp"
 #include "DevConsole.hpp"
 #include "Paths.hpp"
-#include "stdafx.hpp"
 
 #include <ctime>
 #include <cwctype>
@@ -55,20 +54,28 @@ std::shared_ptr<spdlog::logger> Utils::CreateLogger(const std::wstring_view aLog
         constexpr auto oneMbInB = 1024 * oneKbInB;
 
         const auto& loggingConfig = aConfig.GetLogging();
-        size_t maxFiles = loggingConfig.maxFiles;
-        size_t maxFileSize = static_cast<size_t>(loggingConfig.maxFileSize) * oneMbInB;
+        const size_t maxFiles = loggingConfig.maxFiles;
+        const size_t maxFileSize = static_cast<size_t>(loggingConfig.maxFileSize) * oneMbInB;
+
+        const std::string logName = Narrow(aLogName);
+        std::vector<spdlog::sink_ptr> sinks;
 
         auto file = dir / aFilename;
-        auto logger = spdlog::rotating_logger_mt(Narrow(aLogName), file, maxFileSize, maxFiles, true);
-        logger->set_level(loggingConfig.level);
-        logger->flush_on(loggingConfig.flushOn);
+        sinks.emplace_back(std::make_shared<spdlog::sinks::rotating_file_sink_mt>(file, maxFileSize, maxFiles, true));
 
         const auto& dev = aConfig.GetDev();
         if (dev.hasConsole && aDevConsole.IsOutputRedirected())
         {
-            auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-            logger->sinks().push_back(consoleSink);
+            sinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
         }
+
+        auto logger = std::make_shared<spdlog::logger>(logName, sinks.begin(), sinks.end());
+
+        logger->set_level(loggingConfig.level);
+        logger->flush_on(loggingConfig.flushOn);
+        logger->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%-8l%$] [%6t] [%n] %v");
+
+        spdlog::register_logger(logger);
 
         return logger;
     }
