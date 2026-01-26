@@ -55,22 +55,6 @@ add_compile_definitions(
   _WIN32_WINNT=0x0601
 )
 
-add_compile_options(
-  /GS
-  /permissive-
-  /sdl
-
-  /Zc:__cplusplus
-  /Zc:__STDC__
-  /Zc:enumTypes
-  /Zc:inline
-  /Zc:preprocessor
-  /Zc:templateScope
-
-  $<$<CONFIG:Release,MinSizeRel,RelWithDebInfo>:/Gy>
-  $<$<CONFIG:Release,MinSizeRel,RelWithDebInfo>:/Oi>
-)
-
 add_link_options(
   /DEBUG:FULL
 
@@ -96,6 +80,20 @@ include("${RED4EXT_CMAKE_DEPS_DIR}/Wil.cmake")
 # Toolchain settings for this project only
 # ------------------------------------------------------------------------------
 add_compile_options(
+  /GS
+  /sdl
+
+  /permissive-
+  /Zc:__cplusplus
+  /Zc:__STDC__
+  /Zc:enumTypes
+  /Zc:inline
+  /Zc:preprocessor
+  /Zc:templateScope
+
+  $<$<CONFIG:Release,MinSizeRel,RelWithDebInfo>:/Gy>
+  $<$<CONFIG:Release,MinSizeRel,RelWithDebInfo>:/Oi>
+
   # Disable some warnings that are not relevant to us.
   /external:I${FETCHCONTENT_BASE_DIR}
   /external:W0
