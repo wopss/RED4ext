@@ -203,7 +203,7 @@ bool DetourTransaction::QueueThreadsForUpdate()
             continue;
         }
 
-        // https://ntdoc.m417z.com/threadinfoclass.
+        // https://ntdoc.m417z.com/threadinfoclass
         static constexpr THREADINFOCLASS ThreadIsTerminated = (THREADINFOCLASS)0x14;
 
         BOOL isTerminated = FALSE;
