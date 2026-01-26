@@ -1,13 +1,7 @@
+#include "stdafx.hpp"
 #include "ShutdownState.hpp"
 #include "App.hpp"
 #include "GameStateHook.hpp"
-#include "Systems/StateSystem.hpp"
-#include "Utils.hpp"
-
-#include <RED4ext/GameApplication.hpp>
-#include <RED4ext/GameStates.hpp>
-
-#include <exception>
 
 namespace
 {
@@ -48,8 +42,8 @@ bool States::ShutdownState::OnUpdate(RED4ext::CShutdownState* aThis, RED4ext::CG
 
 bool States::ShutdownState::OnExit(RED4ext::CShutdownState* aThis, RED4ext::CGameApplication* aApp)
 {
-    App* app = App::Get();
-    StateSystem* stateSystem = app->GetStateSystem();
+    auto app = App::Get();
+    auto stateSystem = app->GetStateSystem();
 
     stateSystem->OnExit(RED4ext::EGameStateType::Shutdown, aApp);
     return CShutdownState.OnExit(aThis, aApp);
