@@ -17,8 +17,9 @@
 #include <unordered_set>
 
 #include <Windows.h>
+#include <winternl.h>
+
 #include <detours.h>
-#include <tlhelp32.h>
 
 #include <wil/resource.h>
 #include <wil/stl.h>

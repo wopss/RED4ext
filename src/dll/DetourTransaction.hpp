@@ -28,7 +28,7 @@ private:
     };
 
     void SetState(const State aState);
-    void QueueThreadsForUpdate();
+    bool QueueThreadsForUpdate();
 
     const std::source_location m_source;
     State m_state;

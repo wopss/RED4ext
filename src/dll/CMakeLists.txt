@@ -60,6 +60,7 @@ target_sources(
 target_link_libraries(
   RED4ext.Dll
     PRIVATE
+      ntdll
       version
 
       Detours
