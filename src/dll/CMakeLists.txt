@@ -17,6 +17,7 @@ target_sources(RED4ext.Dll PRIVATE ${HEADER_FILES} ${SOURCE_FILES} ${RC_FILES})
 target_precompile_headers(RED4ext.Dll PUBLIC stdafx.hpp)
 target_link_libraries(RED4ext.Dll
   PUBLIC
+    ntdll
     version
 
     Detours
