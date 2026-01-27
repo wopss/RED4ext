@@ -14,7 +14,7 @@ include("${RED4EXT_CMAKE_DIR}/ConfigureDefaultOutputDirectories.cmake")
 include("${RED4EXT_CMAKE_DIR}/ConfigureResourceRc.cmake")
 include("${RED4EXT_CMAKE_DIR}/ConfigureVersionFile.cmake")
 include("${RED4EXT_CMAKE_DIR}/ConfigureVersionFromGit.cmake")
-include("${RED4EXT_CMAKE_DIR}/TargetOutputDirectory.cmake")
+include("${RED4EXT_CMAKE_DIR}/TargetAppendOutputDirectory.cmake")
 
 # ------------------------------------------------------------------------------
 # Versioning

@@ -1,0 +1,44 @@
+function(red4ext_target_append_output_directory TARGET DIRECTORY)
+ foreach(CONFIGURATION ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${CONFIGURATION} CONFIGURATION_UPPER)
+
+    get_target_property(
+      CURRENT_ARCHIVE_OUTPUT_DIRECTORY
+      ${TARGET}
+      "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONFIGURATION_UPPER}}"
+    )
+    if(CURRENT_ARCHIVE_OUTPUT_DIRECTORY)
+      set_target_properties(
+        ${TARGET}
+        PROPERTIES
+          ARCHIVE_OUTPUT_DIRECTORY_${CONFIGURATION_UPPER} "${CURRENT_ARCHIVE_OUTPUT_DIRECTORY}/${DIRECTORY}"
+      )
+    endif()
+
+    get_target_property(
+      CURRENT_LIBRARY_OUTPUT_DIRECTORY
+      ${TARGET}
+      "${CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONFIGURATION_UPPER}}"
+    )
+    if(CURRENT_LIBRARY_OUTPUT_DIRECTORY)
+      set_target_properties(
+        ${TARGET}
+        PROPERTIES
+          LIBRARY_OUTPUT_DIRECTORY_${CONFIGURATION_UPPER} "${CURRENT_LIBRARY_OUTPUT_DIRECTORY}/${DIRECTORY}"
+      )
+    endif()
+
+    get_target_property(
+      CURRENT_RUNTIME_OUTPUT_DIRECTORY
+      ${TARGET}
+      "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONFIGURATION_UPPER}}"
+    )
+    if(CURRENT_RUNTIME_OUTPUT_DIRECTORY)
+      set_target_properties(
+        ${TARGET}
+        PROPERTIES
+          RUNTIME_OUTPUT_DIRECTORY_${CONFIGURATION_UPPER} "${CURRENT_RUNTIME_OUTPUT_DIRECTORY}/${DIRECTORY}"
+      )
+    endif()
+  endforeach()
+endfunction()
