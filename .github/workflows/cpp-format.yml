@@ -51,7 +51,7 @@ jobs:
             $commitSha = (git merge-base --fork-point "remotes/origin/${defaultBranch}")
 
             if ([string]::IsNullOrEmpty(${commitSha})) {
-              Write-Host "No common ancestor found, using the first commit in the repository."
+              Write-Host "No common ancestor found, using the first commit in the branch."
               $commitSha = (git rev-list --max-parents=0 --reverse HEAD | Select-Object -First 1)
             }
           }
