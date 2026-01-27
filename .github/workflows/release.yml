@@ -1,11 +1,15 @@
 name: Release Workflow
+
 on:
-  push:
-    tags:
-      - v*.*.*
+  release:
+    types: [published]
+
+permissions:
+  contents: write
 
 env:
-  config: RelWithDebInfo
+  RED4EXT_BUILD_CONFIG: Release
+  RED4EXT_CHECKSUM_ALGORITHM: SHA256
 
 jobs:
   release:
@@ -14,15 +18,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+        uses: actions/checkout@v6
 
-      - name: Create environment variables
+      - name: Set version environment variable
         run: |
-          $prefix = "refs/tags/v"
-          $version = $env:GITHUB_REF.Substring($prefix.Length)
-          echo "RED4EXT_VERSION=${version}" | Out-File -FilePath $env:GITHUB_ENV -Encoding UTF8 -Append
+          $version = $env:GITHUB_REF_NAME
+          if ($version.StartsWith("v")) {
+            $version = $version.Substring(1)
+          }
+
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_VERSION=${version}"
 
       - name: Create build directory
         run: mkdir build
@@ -31,88 +36,65 @@ jobs:
         working-directory: build
         run: |
           cmake `
-            -DRED4EXT_GIT_METADATA=YES `
-            ${{ github.workspace }}
+            -DRED4EXT_GIT_METADATA=OFF `
+            -DRED4EXT_EXTRA_WARNINGS=ON `
+            -DRED4EXT_TREAT_WARNINGS_AS_ERRORS=ON `
+            "${{ github.workspace }}"
 
       - name: Build
         working-directory: build
         run: |
           cmake `
             --build . `
-            --config ${{ env.config }}
+            --config ${env:RED4EXT_BUILD_CONFIG}
 
-      - name: Prepare ZIP
+      - name: Install
         working-directory: build
         run: |
-          $packagingDir = "./_packaging"
+          cmake `
+            --install . `
+            --prefix "${{ github.workspace }}/build/install" `
+            --config ${env:RED4EXT_BUILD_CONFIG}
 
-          # Create the necessary directories.
-          New-Item -ItemType directory -Path $packagingDir
-          New-Item -ItemType directory -Path $packagingDir/bin/x64
-          New-Item -ItemType directory -Path $packagingDir/red4ext
-          New-Item -ItemType directory -Path $packagingDir/red4ext/plugins
+      - name: Create release package
+        working-directory: build/install
+        run: 7z a -r red4ext-${env:RED4EXT_VERSION}.zip *.dll *.txt
 
-          # Copy the build artifacts.
-          Copy-Item -Path ./bin/winmm.dll -Destination $packagingDir/bin/x64
-          Copy-Item -Path ./bin/RED4ext.dll -Destination $packagingDir/red4ext
+      - name: Create debug symbols package
+        working-directory: build/install
+        run: 7z a -r red4ext-symbols-${env:RED4EXT_VERSION}.zip *.pdb
 
-          # Copy the license and third-party licenses.
-          Copy-Item -Path ../LICENSE.md -Destination $packagingDir/red4ext/LICENSE.txt
-          Copy-Item -Path ../THIRD_PARTY_LICENSES.md -Destination $packagingDir/red4ext/THIRD_PARTY_LICENSES.txt
-
-          # Create the ZIP file.
-          7z a red4ext_${env:RED4EXT_VERSION}.zip $packagingDir/*
-
-      - name: Prepare ZIP (PDBs)
-        working-directory: build
+      - name: Compute package checksum
+        working-directory: build/install
         run: |
-          $packagingDir = "./_packaging_pdbs"
+          $fileHash = Get-FileHash -Algorithm ${env:RED4EXT_CHECKSUM_ALGORITHM} -Path red4ext-${env:RED4EXT_VERSION}.zip
+          $fileHash | Format-List
 
-          # Create the necessary directories.
-          New-Item -ItemType directory -Path $packagingDir
-          New-Item -ItemType directory -Path $packagingDir/bin/x64
-          New-Item -ItemType directory -Path $packagingDir/red4ext
+          $checksum = $fileHash.Hash
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_CHECKSUM_PACKAGE=${checksum}"
 
-          # Copy the PDBs.
-          Copy-Item -Path ./bin/winmm.pdb -Destination $packagingDir/bin/x64
-          Copy-Item -Path ./bin/RED4ext.pdb -Destination $packagingDir/red4ext
-
-          # Create the ZIP file.
-          7z a red4ext_${env:RED4EXT_VERSION}_pdbs.zip $packagingDir/*
-
-      - name: Generate hashes
-        working-directory: build
+      - name: Compute debug symbols checksum
+        working-directory: build/install
         run: |
-          # Generate the hash for the main ZIP and print it.
-          $hash = Get-FileHash -Algorithm SHA256 -Path red4ext_${env:RED4EXT_VERSION}.zip
-          $hash | Format-List
+          $fileHash = Get-FileHash -Algorithm ${env:RED4EXT_CHECKSUM_ALGORITHM} -Path red4ext-symbols-${env:RED4EXT_VERSION}.zip
+          $fileHash | Format-List
 
-          $only_hash = $hash | ForEach-Object { $_.Hash }
-          echo "RED4EXT_SHA256=${only_hash}" | Out-File -FilePath $env:GITHUB_ENV -Encoding UTF8 -Append
-
-          Write-Output "`n"
-
-          # Generate the hash for the PDBs ZIP and print it.
-          $hash = Get-FileHash -Algorithm SHA256 -Path red4ext_${env:RED4EXT_VERSION}_pdbs.zip
-          $hash | Format-List
-
-          $only_hash = $hash | ForEach-Object { $_.Hash }
-          echo "RED4EXT_SHA256_PDBS=${only_hash}" | Out-File -FilePath $env:GITHUB_ENV -Encoding UTF8 -Append
+          $checksum = $fileHash.Hash
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_CHECKSUM_SYMBOLS=${checksum}"
 
       - name: Upload assets
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           append_body: true
-          body: |
+          fail_on_unmatched_files: true
+          body: |-
 
-            ## SHA256 Hashes of the release artifacts
+            ---
 
-            - red4ext_${{ env.RED4EXT_VERSION }}.zip
-              - ${{ env.RED4EXT_SHA256 }}
-            - red4ext_${{ env.RED4EXT_VERSION }}_pdbs.zip
-              - ${{ env.RED4EXT_SHA256_PDBS }}
+            | Filename                                       | ${{ env.RED4EXT_CHECKSUM_ALGORITHM }} |
+            | ---------------------------------------------- | ------------------------------------- |
+            | red4ext-${{ env.RED4EXT_VERSION }}.zip         | `${{ env.RED4EXT_CHECKSUM_PACKAGE }}` |
+            | red4ext-symbols-${{ env.RED4EXT_VERSION }}.zip | `${{ env.RED4EXT_CHECKSUM_SYMBOLS }}` |
           files: |
-            build/red4ext_${{ env.RED4EXT_VERSION }}.zip
-            build/red4ext_${{ env.RED4EXT_VERSION }}_pdbs.zip
+            build/install/red4ext-${{ env.RED4EXT_VERSION }}.zip
+            build/install/red4ext-symbols-${{ env.RED4EXT_VERSION }}.zip
