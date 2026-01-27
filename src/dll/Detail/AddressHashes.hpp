@@ -3,6 +3,9 @@
 
 namespace Hashes
 {
+constexpr std::uint32_t WinMain = 240386859ul;
+constexpr std::uint32_t QuickExit = 388826167ul;
+
 constexpr std::uint32_t AssertionFailed = 4285205681UL;
 
 constexpr std::uint32_t CBaseEngine_InitScripts = 2875532677UL;
@@ -15,6 +18,5 @@ constexpr std::uint32_t Global_ExecuteProcess = 2203918127UL;
 constexpr std::uint32_t GsmState_SessionActive_ReportErrorCode = 2141394294UL;
 
 constexpr std::uint32_t IGameSystem_vtbl = 1854670959UL;
-constexpr std::uint32_t Main = 240386859UL;
 constexpr std::uint32_t ScriptValidator_Validate = 898639042UL;
 } // namespace Hashes
