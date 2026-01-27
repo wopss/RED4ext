@@ -1,13 +1,29 @@
 cmake_minimum_required(VERSION 3.26)
 
-include(cmake/ConfigureDefaultOutputDirectories.cmake)
-include(cmake/ConfigureResourceRc.cmake)
-include(cmake/ConfigureVersionFile.cmake)
-include(cmake/ConfigureVersionFromGit.cmake)
-include(cmake/TargetOutputDirectory.cmake)
+# ------------------------------------------------------------------------------
+# Project variables
+# ------------------------------------------------------------------------------
+set(RED4EXT_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(RED4EXT_CMAKE_DEPS_DIR "${RED4EXT_CMAKE_DIR}/deps")
+set(RED4EXT_CMAKE_TEMPLATES_DIR "${RED4EXT_CMAKE_DIR}/templates")
 
+# ------------------------------------------------------------------------------
+# Modules
+# ------------------------------------------------------------------------------
+include("${RED4EXT_CMAKE_DIR}/ConfigureDefaultOutputDirectories.cmake")
+include("${RED4EXT_CMAKE_DIR}/ConfigureResourceRc.cmake")
+include("${RED4EXT_CMAKE_DIR}/ConfigureVersionFile.cmake")
+include("${RED4EXT_CMAKE_DIR}/ConfigureVersionFromGit.cmake")
+include("${RED4EXT_CMAKE_DIR}/TargetOutputDirectory.cmake")
+
+# ------------------------------------------------------------------------------
+# Versioning
+# ------------------------------------------------------------------------------
 red4ext_configure_version_from_git()
 
+# ------------------------------------------------------------------------------
+# Project definition
+# ------------------------------------------------------------------------------
 project(
   RED4ext
   VERSION "${RED4EXT_GIT_VERSION_MAJOR}.${RED4EXT_GIT_VERSION_MINOR}.${RED4EXT_GIT_VERSION_PATCH}"
@@ -26,13 +42,6 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO ON)
 set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "ProgramDatabase")
 
 red4ext_configure_default_output_directories()
-
-# ------------------------------------------------------------------------------
-# Project variables
-# ------------------------------------------------------------------------------
-set(RED4EXT_CMAKE_DIR "${PROJECT_SOURCE_DIR}/cmake")
-set(RED4EXT_CMAKE_DEPS_DIR "${RED4EXT_CMAKE_DIR}/deps")
-set(RED4EXT_CMAKE_TEMPLATES_DIR "${RED4EXT_CMAKE_DIR}/templates")
 
 # ------------------------------------------------------------------------------
 # Options
