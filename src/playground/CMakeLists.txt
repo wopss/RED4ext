@@ -1,6 +1,6 @@
 add_library(RED4ext.Playground SHARED)
 
-red4ext_target_output_directory(
+red4ext_target_append_output_directory(
   RED4ext.Playground
   plugins
 )
