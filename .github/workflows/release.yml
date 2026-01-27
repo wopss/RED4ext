@@ -31,7 +31,7 @@ jobs:
         working-directory: build
         run: |
           cmake `
-            -DRED4EXT_IS_CI_RELEASE=YES `
+            -DRED4EXT_GIT_METADATA=YES `
             ${{ github.workspace }}
 
       - name: Build
@@ -53,8 +53,8 @@ jobs:
           New-Item -ItemType directory -Path $packagingDir/red4ext/plugins
 
           # Copy the build artifacts.
-          Copy-Item -Path ./${{ env.config }}/bin/winmm.dll -Destination $packagingDir/bin/x64
-          Copy-Item -Path ./${{ env.config }}/bin/RED4ext.dll -Destination $packagingDir/red4ext
+          Copy-Item -Path ./bin/winmm.dll -Destination $packagingDir/bin/x64
+          Copy-Item -Path ./bin/RED4ext.dll -Destination $packagingDir/red4ext
 
           # Copy the license and third-party licenses.
           Copy-Item -Path ../LICENSE.md -Destination $packagingDir/red4ext/LICENSE.txt
@@ -74,8 +74,8 @@ jobs:
           New-Item -ItemType directory -Path $packagingDir/red4ext
 
           # Copy the PDBs.
-          Copy-Item -Path ./${{ env.config }}/bin/winmm.pdb -Destination $packagingDir/bin/x64
-          Copy-Item -Path ./${{ env.config }}/bin/RED4ext.pdb -Destination $packagingDir/red4ext
+          Copy-Item -Path ./bin/winmm.pdb -Destination $packagingDir/bin/x64
+          Copy-Item -Path ./bin/RED4ext.pdb -Destination $packagingDir/red4ext
 
           # Create the ZIP file.
           7z a red4ext_${env:RED4EXT_VERSION}_pdbs.zip $packagingDir/*

@@ -1,7 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
 #include "Resource.hpp"
-#include "Version.hpp"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -26,18 +25,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "Resource.hpp\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -52,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION RED4EXT_VERSION_MAJOR,RED4EXT_VERSION_MINOR,RED4EXT_VERSION_PATCH,0
- PRODUCTVERSION RED4EXT_VERSION_MAJOR,RED4EXT_VERSION_MINOR,RED4EXT_VERSION_PATCH,0
+ FILEVERSION @RED4EXT_GIT_VERSION_MAJOR@,@RED4EXT_GIT_VERSION_MINOR@,@RED4EXT_GIT_VERSION_PATCH@,0
+ PRODUCTVERSION @RED4EXT_GIT_VERSION_MAJOR@,@RED4EXT_GIT_VERSION_MINOR@,@RED4EXT_GIT_VERSION_PATCH@,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,13 +67,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "ProductName", "RED4ext"
-            VALUE "ProductVersion", RED4EXT_VERSION_STR
-            VALUE "FileDescription", "A script extender for REDengine 4."
-            VALUE "FileVersion", RED4EXT_VERSION_STR
-            VALUE "InternalName", "RED4ext.dll"
-            VALUE "LegalCopyright", "Copyright (C) 2020 - present RED4ext project"
-            VALUE "OriginalFilename", "RED4ext.dll"
+            VALUE "ProductName", "@RED4EXT_RESOURCE_PRODUCT_NAME@"
+            VALUE "ProductVersion", "@RED4EXT_GIT_VERSION@"
+            VALUE "FileDescription", "@RED4EXT_RESOURCE_FILE_DESCRIPTION@"
+            VALUE "FileVersion", "@RED4EXT_GIT_VERSION@"
+            VALUE "LegalCopyright", "Copyright (C) 2020-present @PROJECT_NAME@ project"
+            VALUE "InternalName", "@RED4EXT_RESOURCE_INTERNAL_NAME@"
+            VALUE "OriginalFilename", "@RED4EXT_RESOURCE_ORIGINAL_NAME@"
             VALUE "CompanyName", ""
         END
     END
@@ -98,4 +97,3 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-

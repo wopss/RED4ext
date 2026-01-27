@@ -276,7 +276,7 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
         spdlog::warn(L"{} (version: {}) uses RED4ext.SDK v{} which is not supported by RED4ext v{}. If you are the "
                      L"plugin's author, recompile the plugin with a version of RED4ext.SDK that meets the following "
                      L"criteria: RED4ext.SDK >= {} && RED4ext.SDK <= {}",
-                     pluginName, std::to_wstring(pluginVersion), std::to_wstring(pluginSdk), TEXT(RED4EXT_VERSION_STR),
+                     pluginName, std::to_wstring(pluginVersion), std::to_wstring(pluginSdk), Version::Get(),
                      std::to_wstring(MINIMUM_SDK_VERSION), std::to_wstring(LATEST_SDK_VERSION));
         return;
     }

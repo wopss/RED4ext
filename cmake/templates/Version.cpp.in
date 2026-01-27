@@ -1,0 +1,8 @@
+#include "Version.hpp"
+
+#include <string>
+
+std::wstring Version::Get()
+{
+    return L"@RED4EXT_GIT_VERSION@";
+}
