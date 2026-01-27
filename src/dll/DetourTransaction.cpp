@@ -19,9 +19,20 @@ extern "C" NTSYSCALLAPI NTSTATUS NTAPI NtGetNextThread(_In_ HANDLE ProcessHandle
 DetourTransaction::DetourTransaction(const std::source_location aSource)
     : m_source(aSource)
     , m_state(State::Invalid)
+    , m_hasHeapLock(false)
 {
     spdlog::trace("Trying to start a detour transaction in '{}' ({}:{})", m_source.function_name(),
                   m_source.file_name(), m_source.line());
+
+    auto hasLock = HeapLock(GetProcessHeap());
+    if (!hasLock)
+    {
+        spdlog::error("Could not lock the process heap in '{}' ({}:{}). Last error: {}", m_source.function_name(),
+                      m_source.file_name(), m_source.line(), GetLastError());
+        return;
+    }
+
+    m_hasHeapLock = true;
 
     auto result = DetourTransactionBegin();
     if (result == NO_ERROR)
@@ -44,6 +55,11 @@ DetourTransaction::~DetourTransaction()
     if (m_state == State::Started)
     {
         Abort();
+    }
+
+    if (m_hasHeapLock)
+    {
+        HeapUnlock(GetProcessHeap());
     }
 }
 
