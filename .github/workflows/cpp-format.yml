@@ -1,0 +1,83 @@
+name: Format Workflow (C++)
+
+on:
+  push:
+    branches: '**'
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - .clang-format
+
+      - .github/workflows/cpp-format.yml
+
+  pull_request:
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - .clang-format
+
+      - .github/workflows/cpp-format.yml
+
+env:
+  LLVM_VERSION: 21
+
+jobs:
+  format:
+    name: Check the formatting
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Pin to a specific version
+        run: |
+          $latestChocoVersion = (Resolve-ChocoPackageVersion -TargetVersion ${env:LLVM_VERSION} -PackageName 'llvm')
+          Install-ChocoPackage -PackageName llvm -ArgumentList '--allow-downgrade', '--version', ${latestChocoVersion}
+
+      - name: Determine BASE commit (push)
+        if: github.event_name == 'push'
+        env:
+          GIT_COMMIT_SHA: ${{ github.event.before }}
+          GIT_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          $commitSha = ${env:GIT_COMMIT_SHA}
+          if (${commitSha} -match "^0+$") {
+            Write-Host "'before' is all zeros. This is likely a new branch. Finding a common ancestor with the default branch."
+
+            $defaultBranch = ${env:GIT_DEFAULT_BRANCH}
+            $commitSha = (git merge-base --fork-point "remotes/origin/${defaultBranch}")
+
+            if ([string]::IsNullOrEmpty(${commitSha})) {
+              Write-Host "No common ancestor found, using the first commit in the branch."
+              $commitSha = (git rev-list --max-parents=0 --reverse HEAD | Select-Object -First 1)
+            }
+          }
+
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_COMMIT_BEFORE=${commitSha}"
+          exit 0
+
+      - name: Determine BASE commit (pull request)
+        if: github.event_name == 'pull_request'
+        env:
+          GIT_COMMIT_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_COMMIT_BEFORE=${env:GIT_COMMIT_SHA}"
+
+      - name: Determine HEAD commit
+        env:
+          GIT_COMMIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_COMMIT_AFTER=${env:GIT_COMMIT_SHA}"
+
+      - name: Run clang-format
+        run: |
+          git `
+            -c core.autocrlf=false `
+            -c core.eol=lf `
+            -c color.ui=always `
+            clang-format `
+              --style file `
+              --diff ${env:RED4EXT_COMMIT_BEFORE} ${env:RED4EXT_COMMIT_AFTER}

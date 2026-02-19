@@ -1,0 +1,77 @@
+name: Build Workflow
+
+on:
+  push:
+    branches: '**'
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - '**/CMakeLists.txt'
+
+      - .github/workflows/cpp-build.yml
+      - cmake/**
+
+  pull_request:
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - '**/CMakeLists.txt'
+
+      - .github/workflows/cpp-build.yml
+      - cmake/**
+
+jobs:
+  build:
+    name: Build (${{ matrix.config }})
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        config: [Debug, Release]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set commit SHA environment variable
+        run: |
+          $sha = (git rev-parse --short ${env:GITHUB_SHA})
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_BUILD_COMMIT_SHA=${sha}"
+
+      - name: Set build configuration environment variable
+        run: |
+          $config = "${{ matrix.config }}".ToLower()
+          Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_BUILD_CONFIG=${config}"
+
+      - name: Create build directory
+        run: mkdir build
+
+      - name: Configure (CMake)
+        working-directory: build
+        run: |
+          cmake `
+            -DRED4EXT_GIT_METADATA=ON `
+            -DRED4EXT_EXTRA_WARNINGS=ON `
+            -DRED4EXT_TREAT_WARNINGS_AS_ERRORS=ON `
+            "${{ github.workspace }}"
+
+      - name: Build
+        working-directory: build
+        run: |
+          cmake `
+            --build . `
+            --config ${{ matrix.config }}
+
+      - name: Install
+        working-directory: build
+        run: |
+          cmake `
+            --install . `
+            --prefix "${{ github.workspace }}/build/install" `
+            --config ${{ matrix.config }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: red4ext-${{ env.RED4EXT_BUILD_CONFIG }}-${{ env.RED4EXT_BUILD_COMMIT_SHA }}
+          path: build/install
