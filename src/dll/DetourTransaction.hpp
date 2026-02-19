@@ -33,4 +33,5 @@ private:
     const std::source_location m_source;
     State m_state;
     std::vector<wil::unique_handle> m_handles;
+    bool m_hasHeapLock;
 };
