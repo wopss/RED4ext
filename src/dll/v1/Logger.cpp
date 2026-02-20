@@ -1,6 +1,6 @@
-#include "stdafx.hpp"
 #include "Logger.hpp"
 #include "App.hpp"
+#include "stdafx.hpp"
 
 #define Log(func)                                                                                                      \
     if (!aMessage)                                                                                                     \
@@ -73,122 +73,122 @@
                                                                                                                        \
     va_end(args)
 
-void v0::Logger::Trace(RED4ext::PluginHandle aHandle, const char* aMessage)
+void v1::Logger::Trace(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Trace);
 }
 
-void v0::Logger::TraceF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void v1::Logger::TraceF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Trace);
 }
 
-void v0::Logger::TraceW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void v1::Logger::TraceW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Trace);
 }
 
-void v0::Logger::TraceWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void v1::Logger::TraceWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Trace);
 }
 
-void v0::Logger::Debug(RED4ext::PluginHandle aHandle, const char* aMessage)
+void v1::Logger::Debug(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Debug);
 }
 
-void v0::Logger::DebugF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void v1::Logger::DebugF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Debug);
 }
 
-void v0::Logger::DebugW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void v1::Logger::DebugW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Debug);
 }
 
-void v0::Logger::DebugWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void v1::Logger::DebugWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Debug);
 }
 
-void v0::Logger::Info(RED4ext::PluginHandle aHandle, const char* aMessage)
+void v1::Logger::Info(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Info);
 }
 
-void v0::Logger::InfoF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void v1::Logger::InfoF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Info);
 }
 
-void v0::Logger::InfoW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void v1::Logger::InfoW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Info);
 }
 
-void v0::Logger::InfoWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void v1::Logger::InfoWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Info);
 }
 
-void v0::Logger::Warn(RED4ext::PluginHandle aHandle, const char* aMessage)
+void v1::Logger::Warn(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Warn);
 }
 
-void v0::Logger::WarnF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void v1::Logger::WarnF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Warn);
 }
 
-void v0::Logger::WarnW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void v1::Logger::WarnW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Warn);
 }
 
-void v0::Logger::WarnWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void v1::Logger::WarnWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Warn);
 }
 
-void v0::Logger::Error(RED4ext::PluginHandle aHandle, const char* aMessage)
+void v1::Logger::Error(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Error);
 }
 
-void v0::Logger::ErrorF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void v1::Logger::ErrorF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Error);
 }
 
-void v0::Logger::ErrorW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void v1::Logger::ErrorW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Error);
 }
 
-void v0::Logger::ErrorWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void v1::Logger::ErrorWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Error);
 }
 
-void v0::Logger::Critical(RED4ext::PluginHandle aHandle, const char* aMessage)
+void v1::Logger::Critical(RED4ext::PluginHandle aHandle, const char* aMessage)
 {
     Log(Critical);
 }
 
-void v0::Logger::CriticalF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
+void v1::Logger::CriticalF(RED4ext::PluginHandle aHandle, const char* aFormat, ...)
 {
     LogF(char, ::_vscprintf, ::vsnprintf_s, Critical);
 }
 
-void v0::Logger::CriticalW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
+void v1::Logger::CriticalW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage)
 {
     Log(Critical);
 }
 
-void v0::Logger::CriticalWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
+void v1::Logger::CriticalWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...)
 {
     LogF(wchar_t, ::_vscwprintf, ::_vsnwprintf_s, Critical);
 }

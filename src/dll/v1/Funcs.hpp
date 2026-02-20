@@ -1,6 +1,6 @@
 #pragma once
 
-namespace v0
+namespace v1
 {
 namespace Hooking
 {
@@ -20,4 +20,4 @@ bool RegisterNeverRefType(const char* aType);
 bool RegisterMixedRefType(const char* aType);
 } // namespace Scripts
 
-} // namespace v0
+} // namespace v1
