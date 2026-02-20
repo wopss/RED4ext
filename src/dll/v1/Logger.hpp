@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace v0
+namespace v1
 {
 namespace Logger
 {
@@ -42,4 +42,4 @@ void CriticalF(RED4ext::PluginHandle aHandle, const char* aFormat, ...);
 void CriticalW(RED4ext::PluginHandle aHandle, const wchar_t* aMessage);
 void CriticalWF(RED4ext::PluginHandle aHandle, const wchar_t* aFormat, ...);
 } // namespace Logger
-} // namespace v0
+} // namespace v1
