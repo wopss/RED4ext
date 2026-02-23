@@ -1,8 +1,19 @@
 #include "v1/Plugin.hpp"
 #include "Image.hpp"
+#include "PluginBase.hpp"
 #include "stdafx.hpp"
 #include "v1/Funcs.hpp"
 #include "v1/Logger.hpp"
+
+#include <RED4ext/Api/ApiVersion.hpp>
+#include <RED4ext/Api/v1/FileVer.hpp>
+#include <RED4ext/Api/v1/SemVer.hpp>
+#include <wil/resource.h>
+
+#include <cstdint>
+#include <filesystem>
+#include <string_view>
+#include <utility>
 
 v1::Plugin::Plugin(const std::filesystem::path& aPath, wil::unique_hmodule aModule)
     : PluginBase(aPath, std::move(aModule))
@@ -80,17 +91,17 @@ const std::wstring_view v1::Plugin::GetAuthor() const
     return m_info.author;
 }
 
-const RED4ext::SemVer& v1::Plugin::GetVersion() const
+const RED4ext::v1::SemVer& v1::Plugin::GetVersion() const
 {
     return m_info.version;
 }
 
-const RED4ext::FileVer& v1::Plugin::GetRuntimeVersion() const
+const RED4ext::v1::FileVer& v1::Plugin::GetRuntimeVersion() const
 {
     return m_info.runtime;
 }
 
-const RED4ext::SemVer& v1::Plugin::GetSdkVersion() const
+const RED4ext::v1::SemVer& v1::Plugin::GetSdkVersion() const
 {
     return m_info.sdk;
 }

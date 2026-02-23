@@ -1,9 +1,8 @@
 #include "Image.hpp"
 #include "Utils.hpp"
 
-#include <RED4ext/Api/FileVer.hpp>
-#include <RED4ext/Api/Sdk.hpp>
-#include <RED4ext/Api/SemVer.hpp>
+#include <RED4ext/Api/v1/FileVer.hpp>
+#include <RED4ext/Api/v1/SemVer.hpp>
 #include <fmt/xchar.h>
 #include <wil/win32_helpers.h>
 
@@ -18,8 +17,8 @@
 
 Image::Image()
     : m_isCyberpunk(false)
-    , m_fileVersion(RED4EXT_FILEVER(0, 0, 0, 0))
-    , m_productVersion(RED4EXT_SEMVER(0, 0, 0))
+    , m_fileVersion(RED4EXT_V1_FILEVER(0, 0, 0, 0))
+    , m_productVersion(RED4EXT_V1_SEMVER(0, 0, 0))
 {
     std::wstring fileName;
     auto hr = wil::GetModuleFileNameW(nullptr, fileName);
@@ -113,7 +112,7 @@ Image::Image()
             uint16_t build = (fileInfo->dwFileVersionLS >> 16) & 0xFFFF;
             uint16_t revision = fileInfo->dwFileVersionLS & 0xFFFF;
 
-            m_fileVersion = RED4EXT_FILEVER(major, minor, build, revision);
+            m_fileVersion = RED4EXT_V1_FILEVER(major, minor, build, revision);
         }
 
         {
@@ -121,7 +120,7 @@ Image::Image()
             uint16_t minor = fileInfo->dwProductVersionMS & 0xFFFF;
             uint32_t patch = (fileInfo->dwProductVersionLS >> 16) & 0xFFFF;
 
-            m_productVersion = RED4EXT_SEMVER(major, minor, patch);
+            m_productVersion = RED4EXT_V1_SEMVER(major, minor, patch);
         }
     }
 }
@@ -151,17 +150,17 @@ bool Image::IsSupported() const
     return false;
 }
 
-const RED4ext::FileVer& Image::GetFileVersion() const
+const RED4ext::v1::FileVer& Image::GetFileVersion() const
 {
     return m_fileVersion;
 }
 
-const RED4ext::SemVer& Image::GetProductVersion() const
+const RED4ext::v1::SemVer& Image::GetProductVersion() const
 {
     return m_productVersion;
 }
 
-const std::vector<RED4ext::FileVer> Image::GetSupportedVersions() const
+const std::vector<RED4ext::v1::FileVer> Image::GetSupportedVersions() const
 {
     return {m_fileVersion};
 }

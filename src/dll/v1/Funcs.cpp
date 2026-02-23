@@ -1,10 +1,19 @@
 #include "Funcs.hpp"
 #include "App.hpp"
+#include "PluginBase.hpp"
 #include "Utils.hpp"
+
+#include <RED4ext/Api/v1/GameState.hpp>
+#include <RED4ext/Api/v1/PluginHandle.hpp>
+#include <RED4ext/GameStates.hpp>
+#include <fmt/format.h>
+#include <spdlog/spdlog.h>
+
+#include <memory>
 
 namespace
 {
-std::shared_ptr<PluginBase> GetPluginByHandle(RED4ext::PluginHandle aHandle)
+std::shared_ptr<PluginBase> GetPluginByHandle(RED4ext::v1::PluginHandle aHandle)
 {
     auto app = App::Get();
     if (!app)
@@ -24,7 +33,7 @@ std::shared_ptr<PluginBase> GetPluginByHandle(RED4ext::PluginHandle aHandle)
 }
 } // namespace
 
-bool v1::Hooking::Attach(RED4ext::PluginHandle aHandle, void* aTarget, void* aDetour, void** aOriginal)
+bool v1::Hooking::Attach(RED4ext::v1::PluginHandle aHandle, void* aTarget, void* aDetour, void** aOriginal)
 {
     spdlog::trace("Attach request received from plugin with handle {}", fmt::ptr(aHandle));
 
@@ -50,7 +59,7 @@ bool v1::Hooking::Attach(RED4ext::PluginHandle aHandle, void* aTarget, void* aDe
     return hookingSystem->Attach(plugin, aTarget, aDetour, aOriginal);
 }
 
-bool v1::Hooking::Detach(RED4ext::PluginHandle aHandle, void* aTarget)
+bool v1::Hooking::Detach(RED4ext::v1::PluginHandle aHandle, void* aTarget)
 {
     spdlog::trace("Detach request received from plugin with handle {}", fmt::ptr(aHandle));
 
@@ -76,7 +85,8 @@ bool v1::Hooking::Detach(RED4ext::PluginHandle aHandle, void* aTarget)
     return hookingSystem->Detach(plugin, aTarget);
 }
 
-bool v1::GameStates::Add(RED4ext::PluginHandle aHandle, RED4ext::EGameStateType aType, RED4ext::GameState* aState)
+bool v1::GameStates::Add(RED4ext::v1::PluginHandle aHandle, RED4ext::EGameStateType aType,
+                         RED4ext::v1::GameState* aState)
 {
     spdlog::trace("Request to add a game state has been received from plugin with handle {}", fmt::ptr(aHandle));
 
@@ -110,7 +120,7 @@ bool v1::GameStates::Add(RED4ext::PluginHandle aHandle, RED4ext::EGameStateType 
     return false;
 }
 
-bool v1::Scripts::Add(RED4ext::PluginHandle aHandle, const wchar_t* aPath)
+bool v1::Scripts::Add(RED4ext::v1::PluginHandle aHandle, const wchar_t* aPath)
 {
     auto app = App::Get();
     if (!app)

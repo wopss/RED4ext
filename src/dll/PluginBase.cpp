@@ -1,6 +1,16 @@
-#include "stdafx.hpp"
 #include "PluginBase.hpp"
 #include "Utils.hpp"
+
+#include <RED4ext/Api/v1/EMainReason.hpp>
+#include <RED4ext/Api/v1/PluginHandle.hpp>
+#include <spdlog/spdlog.h>
+#include <wil/resource.h>
+
+#include <Windows.h>
+
+#include <exception>
+#include <filesystem>
+#include <utility>
 
 PluginBase::PluginBase(const std::filesystem::path& aPath, wil::unique_hmodule aModule)
     : m_path(aPath)
@@ -71,15 +81,15 @@ bool PluginBase::Query()
     return true;
 }
 
-bool PluginBase::Main(RED4ext::EMainReason aReason)
+bool PluginBase::Main(RED4ext::v1::EMainReason aReason)
 {
     const auto module = GetModule();
     const auto name = GetName();
-    const auto reasonStr = aReason == RED4ext::EMainReason::Load ? L"Load" : L"Unload";
+    const auto reasonStr = aReason == RED4ext::v1::EMainReason::Load ? L"Load" : L"Unload";
 
     spdlog::trace(L"Calling 'Main' function exported by '{}' with reason '{}'...", name, reasonStr);
 
-    using Main_t = bool (*)(RED4ext::PluginHandle, RED4ext::EMainReason, const void*);
+    using Main_t = bool (*)(RED4ext::v1::PluginHandle, RED4ext::v1::EMainReason, const void*);
     auto mainFn = reinterpret_cast<Main_t>(GetProcAddress(module, "Main"));
     if (mainFn)
     {
@@ -103,8 +113,9 @@ bool PluginBase::Main(RED4ext::EMainReason aReason)
         }
         catch (...)
         {
-            spdlog::warn(L"An unknown exception occured while calling 'Main' function with reason '{}', exported by '{}'",
-                         reasonStr, name);
+            spdlog::warn(
+                L"An unknown exception occured while calling 'Main' function with reason '{}', exported by '{}'",
+                reasonStr, name);
             return false;
         }
     }
