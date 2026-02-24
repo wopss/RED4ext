@@ -27,12 +27,10 @@
 #include <utility>
 #include <vector>
 
-#define RED4EXT_API_VERSION_0 0
-
-#define MINIMUM_API_VERSION RED4EXT_API_VERSION_0
+#define MINIMUM_API_VERSION RED4EXT_API_VERSION_1_COMPAT_0
 #define MAXIMUM_API_VERSION RED4EXT_API_VERSION_1
 
-#define MINIMUM_SDK_VERSION RED4EXT_V1_SEMVER(0, 5, 0)
+#define MINIMUM_SDK_VERSION RED4EXT_V1_SDK_1_0_0_COMPAT_0_5_0
 #define MAXIMUM_SDK_VERSION RED4EXT_V1_SDK_CURRENT
 
 #define LOG_FS_ERROR(text, ec)                                                                                         \
@@ -382,7 +380,7 @@ std::shared_ptr<PluginBase> PluginSystem::CreatePlugin(const std::filesystem::pa
 
     switch (apiVersion)
     {
-    case RED4EXT_API_VERSION_0:
+    case RED4EXT_API_VERSION_1_COMPAT_0:
     case RED4EXT_API_VERSION_1:
     {
         return std::make_shared<v1::Plugin>(aPath, std::move(aModule));
