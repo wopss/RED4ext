@@ -8,7 +8,6 @@
 #define LATEST_API_VERSION RED4EXT_API_VERSION_LATEST
 
 #define MINIMUM_SDK_VERSION RED4EXT_SDK_0_5_0
-#define LATEST_SDK_VERSION RED4EXT_SDK_LATEST
 
 #define LOG_FS_ERROR(text, ec)                                                                                         \
     auto val = ec.value();                                                                                             \
@@ -271,13 +270,13 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
     }
 
     const auto& pluginSdk = plugin->GetSdkVersion();
-    if (pluginSdk < MINIMUM_SDK_VERSION || pluginSdk > LATEST_SDK_VERSION)
+    if (pluginSdk < MINIMUM_SDK_VERSION)
     {
         spdlog::warn(L"{} (version: {}) uses RED4ext.SDK v{} which is not supported by RED4ext v{}. If you are the "
                      L"plugin's author, recompile the plugin with a version of RED4ext.SDK that meets the following "
-                     L"criteria: RED4ext.SDK >= {} && RED4ext.SDK <= {}",
+                     L"criteria: RED4ext.SDK >= {}",
                      pluginName, std::to_wstring(pluginVersion), std::to_wstring(pluginSdk), Version::Get(),
-                     std::to_wstring(MINIMUM_SDK_VERSION), std::to_wstring(LATEST_SDK_VERSION));
+                     std::to_wstring(MINIMUM_SDK_VERSION));
         return;
     }
 
