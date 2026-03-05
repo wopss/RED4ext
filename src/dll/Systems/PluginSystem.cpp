@@ -1,8 +1,32 @@
 #include "PluginSystem.hpp"
+#include "Config.hpp"
+#include "ESystemType.hpp"
 #include "Image.hpp"
+#include "Paths.hpp"
+#include "PluginBase.hpp"
 #include "Utils.hpp"
 #include "Version.hpp"
 #include "v0/Plugin.hpp"
+
+#include <RED4ext/Api/EMainReason.hpp>
+#include <RED4ext/Api/Runtime.hpp>
+#include <RED4ext/Api/Version.hpp>
+#include <RED4ext/Api/v0/FileVer.hpp>
+#include <RED4ext/Api/v0/SemVer.hpp>
+
+#include <fmt/format.h>
+#include <spdlog/spdlog.h>
+#include <wil/resource.h>
+
+#include <Windows.h>
+
+#include <cstdint>
+#include <exception>
+#include <filesystem>
+#include <memory>
+#include <system_error>
+#include <utility>
+#include <vector>
 
 #define MINIMUM_API_VERSION RED4EXT_API_VERSION_0
 #define LATEST_API_VERSION RED4EXT_API_VERSION_LATEST
@@ -263,7 +287,7 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
         {
             spdlog::warn(
                 L"{} (version: {}) is incompatible with the current patch. The requested runtime of the plugin is {}",
-                pluginName, std::to_wstring(pluginVersion), requestedRuntime);
+                pluginName, std::to_wstring(pluginVersion), std::to_wstring(requestedRuntime));
 
             m_incompatiblePlugins.emplace_back(pluginName);
             return;
