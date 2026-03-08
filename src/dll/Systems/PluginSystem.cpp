@@ -8,11 +8,12 @@
 #include "Version.hpp"
 #include "v1/Plugin.hpp"
 
-#include <RED4ext/Api/ApiVersion.hpp>
-#include <RED4ext/Api/v1/EMainReason.hpp>
-#include <RED4ext/Api/v1/Runtime.hpp>
-#include <RED4ext/Api/v1/SemVer.hpp>
-#include <RED4ext/Api/v1/Version.hpp>
+#include <RED4ext/Api/EMainReason.hpp>
+#include <RED4ext/Api/Runtime.hpp>
+#include <RED4ext/Api/Version.hpp>
+#include <RED4ext/Api/v0/FileVer.hpp>
+#include <RED4ext/Api/v0/SemVer.hpp>
+
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
 #include <wil/resource.h>
@@ -27,11 +28,10 @@
 #include <utility>
 #include <vector>
 
-#define MINIMUM_API_VERSION RED4EXT_API_VERSION_1_COMPAT_0
-#define MAXIMUM_API_VERSION RED4EXT_API_VERSION_1
+#define MINIMUM_API_VERSION RED4EXT_API_VERSION_0
+#define LATEST_API_VERSION RED4EXT_API_VERSION_LATEST
 
-#define MINIMUM_SDK_VERSION RED4EXT_V1_SDK_1_0_0_COMPAT_0_5_0
-#define MAXIMUM_SDK_VERSION RED4EXT_V1_SDK_CURRENT
+#define MINIMUM_SDK_VERSION RED4EXT_SDK_0_5_0
 
 #define LOG_FS_ERROR(text, ec)                                                                                         \
     auto val = ec.value();                                                                                             \
@@ -286,7 +286,7 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
         {
             spdlog::warn(
                 L"{} (version: {}) is incompatible with the current patch. The requested runtime of the plugin is {}",
-                pluginName, std::to_wstring(pluginVersion), requestedRuntime);
+                pluginName, std::to_wstring(pluginVersion), std::to_wstring(requestedRuntime));
 
             m_incompatiblePlugins.emplace_back(pluginName);
             return;
@@ -294,13 +294,13 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
     }
 
     const auto& pluginSdk = plugin->GetSdkVersion();
-    if (pluginSdk < MINIMUM_SDK_VERSION || pluginSdk > MAXIMUM_SDK_VERSION)
+    if (pluginSdk < MINIMUM_SDK_VERSION)
     {
         spdlog::warn(L"{} (version: {}) uses RED4ext.SDK v{} which is not supported by RED4ext v{}. If you are the "
                      L"plugin's author, recompile the plugin with a version of RED4ext.SDK that meets the following "
-                     L"criteria: RED4ext.SDK >= {} && RED4ext.SDK <= {}",
+                     L"criteria: RED4ext.SDK >= {}",
                      pluginName, std::to_wstring(pluginVersion), std::to_wstring(pluginSdk), Version::Get(),
-                     std::to_wstring(MINIMUM_SDK_VERSION), std::to_wstring(MAXIMUM_SDK_VERSION));
+                     std::to_wstring(MINIMUM_SDK_VERSION));
         return;
     }
 

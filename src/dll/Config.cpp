@@ -1,6 +1,20 @@
-#include "stdafx.hpp"
 #include "Config.hpp"
+#include "Paths.hpp"
 #include "Utils.hpp"
+
+#include <spdlog/common.h>
+#include <toml11/find.hpp>
+#include <toml11/parser.hpp>
+#include <toml11/types.hpp>
+
+#include <Windows.h>
+
+#include <exception>
+#include <filesystem>
+#include <iostream>
+#include <string>
+#include <system_error>
+#include <vector>
 
 #define DEFAULT_TOML_EXCEPTION_MSG L"An exception occured while parsing the config file:\n\n{}\n\nFile: {}"
 
@@ -91,20 +105,18 @@ void Config::Save(const std::filesystem::path& aFile)
 {
     try
     {
-        using ordered_value = toml::basic_value<toml::preserve_comments, tsl::ordered_map>;
-
         auto logLevel = spdlog::level::to_string_view(m_logging.level).data();
         auto flushOn = spdlog::level::to_string_view(m_logging.flushOn).data();
 
-        ordered_value config{
+        toml::ordered_value config{toml::ordered_table{
             {"version", LatestVersion},
-            {"logging", ordered_value{{"level", logLevel},
-                                      {"flush_on", flushOn},
-                                      {"max_files", m_logging.maxFiles},
-                                      {"max_file_size", m_logging.maxFileSize}}},
+            {"logging", toml::ordered_table{{"level", logLevel},
+                                            {"flush_on", flushOn},
+                                            {"max_files", m_logging.maxFiles},
+                                            {"max_file_size", m_logging.maxFileSize}}},
 
-            {"plugins", ordered_value{{"enabled", m_plugins.isEnabled}, {"ignored", std::vector<std::string>{}}}},
-            {"dev", ordered_value{{"console", m_dev.hasConsole}, {"wait_for_debugger", m_dev.waitForDebugger}}}};
+            {"plugins", toml::ordered_table{{"enabled", m_plugins.isEnabled}, {"ignored", std::vector<std::string>{}}}},
+            {"dev", toml::ordered_table{{"console", m_dev.hasConsole}, {"wait_for_debugger", m_dev.waitForDebugger}}}}};
 
         config.comments().push_back(
             " See https://docs.red4ext.com/getting-started/configuration for more options or information.");

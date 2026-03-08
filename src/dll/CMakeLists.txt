@@ -70,6 +70,5 @@ target_link_libraries(
       simdjson::simdjson
       spdlog::spdlog
       toml11::toml11
-      tsl::ordered_map
       WIL::WIL
 )

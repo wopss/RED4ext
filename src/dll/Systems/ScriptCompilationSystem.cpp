@@ -1,5 +1,24 @@
 #include "ScriptCompilationSystem.hpp"
+#include "ESystemType.hpp"
+#include "Paths.hpp"
+#include "PluginBase.hpp"
+#include "SourceRefRepository.hpp"
 #include "Utils.hpp"
+
+#include <fmt/format.h>
+#include <fmt/xchar.h>
+#include <spdlog/spdlog.h>
+
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <ostream>
+#include <string>
+#include <utility>
+#include <vector>
 
 ScriptCompilationSystem::ScriptCompilationSystem(const Paths& aPaths)
     : m_paths(aPaths)
@@ -117,26 +136,32 @@ bool ScriptCompilationSystem::Add(std::shared_ptr<PluginBase> aPlugin, const wch
 std::wstring ScriptCompilationSystem::GetCompilationArgs(const FixedWString& aOriginal)
 {
     fmt::wmemory_buffer buffer;
+
     if (m_hasScriptsBlob)
     {
         spdlog::info("Using scriptsBlobPath");
-        format_to(std::back_inserter(buffer), LR"(-compile "{}" "{}")", m_paths.GetR6Scripts(), m_scriptsBlobPath);
+        fmt::format_to(std::back_inserter(buffer), LR"(-compile "{}" "{}")", m_paths.GetR6Scripts(), m_scriptsBlobPath);
     }
     else
     {
-        format_to(std::back_inserter(buffer), aOriginal.str);
+        fmt::format_to(std::back_inserter(buffer), L"{}", aOriginal.str);
     }
+
     spdlog::info("Adding paths to redscript compilation:");
+
     auto pathsFilePath = m_paths.GetRedscriptPathsFile();
     std::wofstream pathsFile(pathsFilePath, std::ios::out);
+
     for (const auto& [plugin, path] : m_scriptPaths)
     {
         spdlog::info(L"{}: '{}'", plugin->GetName(), path);
         pathsFile << path.wstring() << std::endl;
     }
+
     spdlog::info(L"Paths written to: '{}'", pathsFilePath);
-    format_to(std::back_inserter(buffer), LR"( -compilePathsFile "{}")", pathsFilePath);
-    return fmt::to_string(buffer);
+    fmt::format_to(std::back_inserter(buffer), LR"( -compilePathsFile "{}")", pathsFilePath);
+
+    return fmt::to_wstring(buffer);
 }
 
 const ScriptCompilationSystem::Map_t& ScriptCompilationSystem::GetScriptPaths() const
