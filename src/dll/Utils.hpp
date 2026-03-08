@@ -1,5 +1,19 @@
 #pragma once
 
+#include <RED4ext/GameStates.hpp>
+
+#include <fmt/format.h>
+#include <spdlog/logger.h>
+
+#include <Windows.h>
+
+#include <cstdint>
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <utility>
+
 class Config;
 class DevConsole;
 class Paths;
@@ -54,20 +68,9 @@ template<typename Char>
 struct fmt::formatter<std::filesystem::path, Char> : formatter<basic_string_view<Char>, Char>
 {
     template<typename FormatContext>
-    auto format(const std::filesystem::path& path, FormatContext& ctx)
+    auto format(const std::filesystem::path& path, FormatContext& ctx) const
     {
         return formatter<basic_string_view<Char>, Char>::format(path.c_str(), ctx);
-    }
-};
-
-template<typename Char>
-struct fmt::formatter<RED4ext::FileVer, Char> : formatter<basic_string_view<Char>, Char>
-{
-    template<typename FormatContext>
-    auto format(const RED4ext::FileVer& aFileVersion, FormatContext& ctx)
-    {
-        return fmt::format_to(ctx.out(), "{}.{}.{}.{}", aFileVersion.major, aFileVersion.minor, aFileVersion.build,
-                              aFileVersion.revision);
     }
 };
 

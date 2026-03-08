@@ -77,7 +77,6 @@ include(FetchContent)
 
 include("${RED4EXT_CMAKE_DEPS_DIR}/Detours.cmake")
 include("${RED4EXT_CMAKE_DEPS_DIR}/Fmt.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/OrderedMap.cmake")
 include("${RED4EXT_CMAKE_DEPS_DIR}/RED4extSdk.cmake")
 include("${RED4EXT_CMAKE_DEPS_DIR}/Redscript.cmake")
 include("${RED4EXT_CMAKE_DEPS_DIR}/Simdjson.cmake")
@@ -88,6 +87,10 @@ include("${RED4EXT_CMAKE_DEPS_DIR}/Wil.cmake")
 # ------------------------------------------------------------------------------
 # Toolchain settings for this project only
 # ------------------------------------------------------------------------------
+add_compile_definitions(
+  NOMINMAX
+)
+
 add_compile_options(
   /GS
   /sdl

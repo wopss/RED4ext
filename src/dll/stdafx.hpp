@@ -32,6 +32,5 @@
 #include <simdjson.h>
 #include <spdlog/spdlog.h>
 #include <toml.hpp>
-#include <tsl/ordered_map.h>
 
 #include <RED4ext/RED4ext.hpp>

@@ -1,7 +1,7 @@
 FetchContent_Declare(
   Detours
   GIT_REPOSITORY  https://github.com/microsoft/Detours.git
-  GIT_TAG         4b8c659f549b0ab21cf649377c7a84eb708f5e68
+  GIT_TAG         9764cebcb1a75940e68fa83d6730ffaf0f669401
 )
 FetchContent_MakeAvailable(Detours)
 

@@ -4,7 +4,7 @@ option(RED4EXT_USE_PCH "" ON)
 FetchContent_Declare(
   RED4ext.SDK
   GIT_REPOSITORY  https://github.com/wopss/RED4ext.SDK.git
-  GIT_TAG         5e5d4fba9917a58a9622c72c4c902dfd27f553b8
+  GIT_TAG         4ea14b652a8b52e8bda4efc7ab5e4a030d60407c
 )
 FetchContent_MakeAvailable(RED4ext.SDK)
 
