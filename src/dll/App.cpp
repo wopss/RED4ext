@@ -89,7 +89,7 @@ App::App()
     spdlog::info("Product version: {}.{}{}", productVer.major, productVer.minor, productVer.patch);
     spdlog::info("File version: {}.{}.{}.{}", fileVer.major, fileVer.minor, fileVer.build, fileVer.revision);
 
-    const auto minimumVersion = RED4EXT_V1_RUNTIME_2_31;
+    const auto minimumVersion = RED4EXT_V1_RUNTIME_VERSION_2_31;
     if (fileVer < minimumVersion)
     {
         spdlog::error(L"To use this version of RED4ext, ensure your game is updated to patch 2.31 or newer");

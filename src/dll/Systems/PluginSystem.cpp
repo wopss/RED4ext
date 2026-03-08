@@ -8,11 +8,12 @@
 #include "Version.hpp"
 #include "v1/Plugin.hpp"
 
-#include <RED4ext/Api/EMainReason.hpp>
-#include <RED4ext/Api/Runtime.hpp>
-#include <RED4ext/Api/Version.hpp>
-#include <RED4ext/Api/v0/FileVer.hpp>
-#include <RED4ext/Api/v0/SemVer.hpp>
+#include <RED4ext/Api/ApiVersion.hpp>
+#include <RED4ext/Api/v1/EMainReason.hpp>
+#include <RED4ext/Api/v1/FileVer.hpp>
+#include <RED4ext/Api/v1/Runtime.hpp>
+#include <RED4ext/Api/v1/SemVer.hpp>
+#include <RED4ext/Api/v1/Version.hpp>
 
 #include <fmt/format.h>
 #include <spdlog/spdlog.h>
@@ -28,10 +29,10 @@
 #include <utility>
 #include <vector>
 
-#define MINIMUM_API_VERSION RED4EXT_API_VERSION_0
-#define LATEST_API_VERSION RED4EXT_API_VERSION_LATEST
+#define MINIMUM_API_VERSION RED4EXT_API_VERSION_1_COMPAT_0
+#define MAXIMUM_API_VERSION RED4EXT_API_VERSION_1
 
-#define MINIMUM_SDK_VERSION RED4EXT_SDK_0_5_0
+#define MINIMUM_SDK_VERSION RED4EXT_V1_SDK_VERSION_1_0_0_COMPAT_0_5_0
 
 #define LOG_FS_ERROR(text, ec)                                                                                         \
     auto val = ec.value();                                                                                             \
@@ -267,7 +268,7 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
     const auto image = Image::Get();
 
     const auto& requestedRuntime = plugin->GetRuntimeVersion();
-    if (requestedRuntime != RED4EXT_V1_RUNTIME_INDEPENDENT)
+    if (requestedRuntime != RED4EXT_V1_RUNTIME_VERSION_INDEPENDENT)
     {
         // Check if the plugins is compiled for a supported version.
         bool isSupported = false;
