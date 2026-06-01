@@ -235,7 +235,16 @@ void PluginSystem::Load(const std::filesystem::path& aPath, bool aUseAlteredSear
 
     wil::unique_hmodule handle;
     if (aPath.extension() == L".exe")
-        handle.reset(GetModuleHandleA(nullptr));
+    {
+        // GetModuleHandle returns a borrowed handle that must not be passed to FreeLibrary, but
+        // PluginBase stores the handle in another wil::unique_hmodule. Pin the host module so the
+        // eventual FreeLibrary call is a documented no-op and the loader refcount stays balanced.
+        HMODULE raw = nullptr;
+        if (GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_PIN, nullptr, &raw))
+        {
+            handle.reset(raw);
+        }
+    }
     else
         handle.reset(LoadLibraryEx(aPath.c_str(), nullptr, flags));
 
