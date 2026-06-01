@@ -152,16 +152,37 @@ void Addresses::LoadSections()
     IMAGE_SECTION_HEADER* sectionHeaders = IMAGE_FIRST_SECTION(peHeader);
     const int numberOfSections = peHeader->FileHeader.NumberOfSections;
 
+    bool foundCode = false;
+    bool foundData = false;
+    bool foundRData = false;
+
     // List the sections
     for (int i = 0; i < numberOfSections; i++)
     {
         IMAGE_SECTION_HEADER* sectionHeader = &sectionHeaders[i];
         if (strcmp(reinterpret_cast<const char*>(sectionHeader->Name), ".text") == 0)
+        {
             m_codeOffset = sectionHeader->VirtualAddress;
+            foundCode = true;
+        }
         else if (strcmp(reinterpret_cast<const char*>(sectionHeader->Name), ".data") == 0)
+        {
             m_dataOffset = sectionHeader->VirtualAddress;
+            foundData = true;
+        }
         else if (strcmp(reinterpret_cast<const char*>(sectionHeader->Name), ".rdata") == 0)
+        {
             m_rdataOffset = sectionHeader->VirtualAddress;
+            foundRData = true;
+        }
+    }
+
+    if (!foundCode || !foundData || !foundRData)
+    {
+        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE(
+            L"Error: Could not locate the expected PE sections in the host module (.text={}, .data={}, .rdata={}).",
+            foundCode, foundData, foundRData);
+        return;
     }
 }
 
