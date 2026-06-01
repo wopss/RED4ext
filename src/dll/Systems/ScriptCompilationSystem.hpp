@@ -29,21 +29,21 @@ public:
     bool Add(std::shared_ptr<PluginBase> aPlugin, const wchar_t* aPath);
 
     void SetScriptsBlob(const std::filesystem::path& aPath);
-    const std::filesystem::path& GetScriptsBlob() const;
+    std::filesystem::path GetScriptsBlob() const;
     bool HasScriptsBlob() const;
 
     void SetModdedScriptsBlob(const std::filesystem::path& aPath);
-    const std::filesystem::path& GetModdedScriptsBlob() const;
+    std::filesystem::path GetModdedScriptsBlob() const;
     bool HasModdedScriptsBlob() const;
 
     void RegisterNeverRefType(std::string aType);
-    const std::vector<std::string>& GetNeverRefTypes() const;
+    std::vector<std::string> GetNeverRefTypes() const;
 
     void RegisterMixedRefType(std::string aType);
-    const std::vector<std::string>& GetMixedRefTypes() const;
+    std::vector<std::string> GetMixedRefTypes() const;
 
     std::wstring GetCompilationArgs(const FixedWString& aOriginal);
-    const Map_t& GetScriptPaths() const;
+    Map_t GetScriptPaths() const;
 
     SourceRefRepository& GetSourceRefRepository();
 
@@ -52,7 +52,7 @@ private:
 
     const Paths& m_paths;
 
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
     Map_t m_scriptPaths;
     bool m_hasScriptsBlob;
     std::filesystem::path m_scriptsBlobPath;

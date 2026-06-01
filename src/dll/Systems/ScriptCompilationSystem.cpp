@@ -48,53 +48,63 @@ void ScriptCompilationSystem::Add(std::shared_ptr<PluginBase> aPlugin, std::file
 
 void ScriptCompilationSystem::SetScriptsBlob(const std::filesystem::path& aPath)
 {
+    std::scoped_lock _(m_mutex);
     m_scriptsBlobPath = aPath;
     m_hasScriptsBlob = true;
 }
 
-const std::filesystem::path& ScriptCompilationSystem::GetScriptsBlob() const
+std::filesystem::path ScriptCompilationSystem::GetScriptsBlob() const
 {
+    std::scoped_lock _(m_mutex);
     return m_scriptsBlobPath;
 }
 
 bool ScriptCompilationSystem::HasScriptsBlob() const
 {
+    std::scoped_lock _(m_mutex);
     return m_hasScriptsBlob;
 }
 
 void ScriptCompilationSystem::SetModdedScriptsBlob(const std::filesystem::path& aPath)
 {
+    std::scoped_lock _(m_mutex);
     m_moddedScriptsBlobPath = aPath;
     m_hasModdedScriptsBlob = true;
 }
 
-const std::filesystem::path& ScriptCompilationSystem::GetModdedScriptsBlob() const
+std::filesystem::path ScriptCompilationSystem::GetModdedScriptsBlob() const
 {
+    std::scoped_lock _(m_mutex);
     return m_moddedScriptsBlobPath;
 }
 
 bool ScriptCompilationSystem::HasModdedScriptsBlob() const
 {
+    std::scoped_lock _(m_mutex);
     return m_hasModdedScriptsBlob;
 }
 
 void ScriptCompilationSystem::RegisterNeverRefType(std::string aType)
 {
+    std::scoped_lock _(m_mutex);
     m_neverRefTypes.emplace_back(std::move(aType));
 }
 
-const std::vector<std::string>& ScriptCompilationSystem::GetNeverRefTypes() const
+std::vector<std::string> ScriptCompilationSystem::GetNeverRefTypes() const
 {
+    std::scoped_lock _(m_mutex);
     return m_neverRefTypes;
 }
 
 void ScriptCompilationSystem::RegisterMixedRefType(std::string aType)
 {
+    std::scoped_lock _(m_mutex);
     m_mixedRefTypes.emplace_back(std::move(aType));
 }
 
-const std::vector<std::string>& ScriptCompilationSystem::GetMixedRefTypes() const
+std::vector<std::string> ScriptCompilationSystem::GetMixedRefTypes() const
 {
+    std::scoped_lock _(m_mutex);
     return m_mixedRefTypes;
 }
 
@@ -135,6 +145,8 @@ bool ScriptCompilationSystem::Add(std::shared_ptr<PluginBase> aPlugin, const wch
 
 std::wstring ScriptCompilationSystem::GetCompilationArgs(const FixedWString& aOriginal)
 {
+    std::scoped_lock _(m_mutex);
+
     fmt::wmemory_buffer buffer;
 
     if (m_hasScriptsBlob)
@@ -164,8 +176,9 @@ std::wstring ScriptCompilationSystem::GetCompilationArgs(const FixedWString& aOr
     return fmt::to_wstring(buffer);
 }
 
-const ScriptCompilationSystem::Map_t& ScriptCompilationSystem::GetScriptPaths() const
+ScriptCompilationSystem::Map_t ScriptCompilationSystem::GetScriptPaths() const
 {
+    std::scoped_lock _(m_mutex);
     return m_scriptPaths;
 }
 
