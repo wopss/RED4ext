@@ -118,7 +118,10 @@ bool HookingSystem::Detach(std::shared_ptr<PluginBase> aPlugin, void* aTarget)
             auto& item = it->second;
             if (item.target == aTarget)
             {
-                *item.original = nullptr;
+                if (item.original)
+                {
+                    *item.original = nullptr;
+                }
                 it = m_hooks.erase(it);
             }
             else
