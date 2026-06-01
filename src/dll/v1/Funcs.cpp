@@ -122,6 +122,12 @@ bool v1::GameStates::Add(RED4ext::v1::PluginHandle aHandle, RED4ext::EGameStateT
 
 bool v1::Scripts::Add(RED4ext::v1::PluginHandle aHandle, const wchar_t* aPath)
 {
+    if (!aPath)
+    {
+        spdlog::warn("Plugin with handle {} called Scripts::Add with a NULL path", fmt::ptr(aHandle));
+        return false;
+    }
+
     auto app = App::Get();
     if (!app)
     {
@@ -140,6 +146,12 @@ bool v1::Scripts::Add(RED4ext::v1::PluginHandle aHandle, const wchar_t* aPath)
 
 bool v1::Scripts::RegisterNeverRefType(const char* aType)
 {
+    if (!aType)
+    {
+        spdlog::warn("Scripts::RegisterNeverRefType called with a NULL type name");
+        return false;
+    }
+
     auto app = App::Get();
     if (!app)
     {
@@ -153,6 +165,12 @@ bool v1::Scripts::RegisterNeverRefType(const char* aType)
 
 bool v1::Scripts::RegisterMixedRefType(const char* aType)
 {
+    if (!aType)
+    {
+        spdlog::warn("Scripts::RegisterMixedRefType called with a NULL type name");
+        return false;
+    }
+
     auto app = App::Get();
     if (!app)
     {
