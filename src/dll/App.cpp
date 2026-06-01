@@ -117,23 +117,12 @@ void App::Destruct()
 {
     spdlog::info("RED4ext is terminating...");
 
-    // Detaching hooks here and not in dtor, since the dtor can be called by CRT when the processes exists. We don't
-    // really care if this will be called or not when the game exist ungracefully.
-
-    spdlog::trace("Detaching the hooks...");
-
-    DetourTransaction transaction;
-    if (transaction.IsValid())
+    // Defence in depth: if Shutdown was not called (e.g. the DLL is being unloaded without a
+    // QuickExit), make sure the hooks come off before g_app's destructor runs. DetachHooks is a
+    // no-op when the hooks have already been detached.
+    if (auto* app = g_app.get())
     {
-        auto success = Hooks::WinMain::Detach() && Hooks::QuickExit::Detach() && Hooks::CGameApplication::Detach() &&
-                       Hooks::ExecuteProcess::Detach() && Hooks::InitScripts::Detach() &&
-                       Hooks::LoadScripts::Detach() && Hooks::ValidateScripts::Detach() &&
-                       Hooks::AssertionFailed::Detach() && Hooks::CollectSaveableSystems::Detach() &&
-                       Hooks::gsmState_SessionActive::Detach();
-        if (success)
-        {
-            transaction.Commit();
-        }
+        app->DetachHooks();
     }
 
     g_app.reset(nullptr);
@@ -166,6 +155,11 @@ void App::Startup()
 void App::Shutdown()
 {
     spdlog::info("RED4ext is shutting down...");
+
+    // Detach RED4ext's own game-side hooks before tearing down any system. Otherwise an in-flight
+    // hook callback on another thread can call back into App::GetXxxSystem() after m_systems has
+    // been cleared and throw an uncaught std::out_of_range into the game.
+    DetachHooks();
 
     for (auto& system : m_systems | std::ranges::views::reverse)
     {
@@ -214,7 +208,7 @@ const Paths* App::GetPaths() const
     return &m_paths;
 }
 
-bool App::AttachHooks() const
+bool App::AttachHooks()
 {
     spdlog::trace("Attaching hooks...");
 
@@ -228,9 +222,38 @@ bool App::AttachHooks() const
                    Hooks::ExecuteProcess::Attach() && Hooks::InitScripts::Attach() && Hooks::LoadScripts::Attach() &&
                    Hooks::ValidateScripts::Attach() && Hooks::AssertionFailed::Attach() &&
                    Hooks::CollectSaveableSystems::Attach() && Hooks::gsmState_SessionActive::Attach();
-    if (success)
+    if (success && transaction.Commit())
     {
-        return transaction.Commit();
+        m_hooksAttached = true;
+        return true;
+    }
+
+    return false;
+}
+
+bool App::DetachHooks()
+{
+    if (!m_hooksAttached)
+    {
+        return true;
+    }
+
+    spdlog::trace("Detaching the hooks...");
+
+    DetourTransaction transaction;
+    if (!transaction.IsValid())
+    {
+        return false;
+    }
+
+    auto success = Hooks::WinMain::Detach() && Hooks::QuickExit::Detach() && Hooks::CGameApplication::Detach() &&
+                   Hooks::ExecuteProcess::Detach() && Hooks::InitScripts::Detach() && Hooks::LoadScripts::Detach() &&
+                   Hooks::ValidateScripts::Detach() && Hooks::AssertionFailed::Detach() &&
+                   Hooks::CollectSaveableSystems::Detach() && Hooks::gsmState_SessionActive::Detach();
+    if (success && transaction.Commit())
+    {
+        m_hooksAttached = false;
+        return true;
     }
 
     return false;

@@ -32,7 +32,8 @@ public:
 private:
     App();
 
-    bool AttachHooks() const;
+    bool AttachHooks();
+    bool DetachHooks();
 
     template<typename T, typename... Args, typename = std::enable_if_t<std::is_base_of_v<ISystem, T>>>
     inline void AddSystem(Args&&... args)
@@ -48,4 +49,5 @@ private:
     DevConsole m_devConsole;
 
     std::vector<std::unique_ptr<ISystem>> m_systems;
+    bool m_hooksAttached = false;
 };
