@@ -53,7 +53,10 @@
     va_list args;                                                                                                      \
     va_start(args, aFormat);                                                                                           \
                                                                                                                        \
-    auto len = count_fn(aFormat, args);                                                                                \
+    va_list argsForLen;                                                                                                \
+    va_copy(argsForLen, args);                                                                                         \
+    auto len = count_fn(aFormat, argsForLen);                                                                          \
+    va_end(argsForLen);                                                                                                \
     if (len > 0)                                                                                                       \
     {                                                                                                                  \
         std::vector<char_type> buffer(len + 1); /* len + NULL character. */                                            \
