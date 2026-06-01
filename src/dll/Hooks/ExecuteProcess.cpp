@@ -24,8 +24,16 @@ bool _Global_ExecuteProcess(void* a1, RED4ext::CString& aCommand, FixedWString& 
     }
 
     auto sccPath = std::filesystem::path(aCommand.c_str());
-    auto& sccLib = sccPath.replace_filename("scc_lib.dll");
-    auto sccHandle = LoadLibrary(sccLib.c_str());
+    if (!sccPath.is_absolute())
+    {
+        spdlog::warn(L"Refusing to load scc_lib.dll because the scc command is not an absolute path: '{}'",
+                     sccPath.native());
+        return Global_ExecuteProcess(a1, aCommand, aArgs, aCurrentDirectory, a5);
+    }
+
+    auto sccLib = sccPath.replace_filename(L"scc_lib.dll");
+    auto sccHandle = LoadLibraryExW(sccLib.c_str(), nullptr,
+                                    LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR | LOAD_LIBRARY_SEARCH_SYSTEM32);
     if (sccHandle)
     {
         auto scc = scc_load_api(sccHandle);
