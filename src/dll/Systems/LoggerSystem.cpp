@@ -21,6 +21,8 @@ void LoggerSystem::Startup()
 
 void LoggerSystem::Shutdown()
 {
+    std::scoped_lock _(m_loggersMutex);
+
     auto count = m_loggers.size();
 
     spdlog::trace("Flusing {} logger(s)...", count);
