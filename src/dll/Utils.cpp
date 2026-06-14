@@ -18,8 +18,11 @@ std::shared_ptr<spdlog::logger> Utils::CreateLogger(const std::wstring_view aLog
     if (loggingConfig.level == spdlog::level::level_enum::off)
     {
         std::vector<spdlog::sink_ptr> sinks;
-    
-        return std::make_shared<spdlog::logger>("dummy_logger", begin(sinks), end(sinks));
+        auto logger = std::make_shared<spdlog::logger>("dummy_logger", begin(sinks), end(sinks));
+        logger->set_level(spdlog::level::level_enum::off);
+        logger->flush_on(loggingConfig.flushOn);
+        
+        return logger;
     }
     
     try
