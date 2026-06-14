@@ -13,6 +13,15 @@ std::shared_ptr<spdlog::logger> Utils::CreateLogger(const std::wstring_view aLog
                                                     const Paths& aPaths, const Config& aConfig,
                                                     const DevConsole& aDevConsole)
 {
+    const auto& loggingConfig = aConfig.GetLogging();
+
+    if (loggingConfig.level == spdlog::level::level_enum::off)
+    {
+        std::vector<spdlog::sink_ptr> sinks;
+    
+        return std::make_shared<spdlog::logger>("dummy_logger", begin(sinks), end(sinks));
+    }
+    
     try
     {
         auto dir = aPaths.GetLogsDir();
@@ -53,7 +62,6 @@ std::shared_ptr<spdlog::logger> Utils::CreateLogger(const std::wstring_view aLog
         constexpr auto oneKbInB = 1024 * oneByte;
         constexpr auto oneMbInB = 1024 * oneKbInB;
 
-        const auto& loggingConfig = aConfig.GetLogging();
         const size_t maxFiles = loggingConfig.maxFiles;
         const size_t maxFileSize = static_cast<size_t>(loggingConfig.maxFileSize) * oneMbInB;
 
