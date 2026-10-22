@@ -34,7 +34,7 @@ bool IsUnmodifiedScriptsBlob(const std::filesystem::path& aPath)
 
 bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath)
 {
-    spdlog::trace(L"Loading script blob '{}'", Utils::Widen(aPath.c_str()));
+    spdlog::trace("Loading script blob '{}'", aPath.c_str());
 
     auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
     if (scriptCompilationSystem->HasModdedScriptsBlob() && IsUnmodifiedScriptsBlob(aPath.c_str()))
