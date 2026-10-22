@@ -36,9 +36,9 @@ bool _ScriptValidator_Validate(uint64_t self, uint64_t a1, RED4ext::ScriptReport
     const auto result = ScriptValidator_Validate(self, a1, aReport);
     std::vector<ValidationError> validationErrors;
 
-    for (std::uint32_t i = 0; i < std::max(aReport.errors->size, 1u) - 1; ++i)
+    for (std::uint32_t i = 0; i < std::max(aReport.errors->Size(), 1u) - 1; ++i)
     {
-        auto message = aReport.errors->entries[i].c_str();
+        auto message = (*aReport.errors)[i].c_str();
         const auto error = ValidationError::FromString(message);
         validationErrors.push_back(error);
 

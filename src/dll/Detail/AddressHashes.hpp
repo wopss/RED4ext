@@ -18,5 +18,6 @@ constexpr std::uint32_t Global_ExecuteProcess = 2203918127UL;
 constexpr std::uint32_t GsmState_SessionActive_ReportErrorCode = 2141394294UL;
 
 constexpr std::uint32_t IGameSystem_vtbl = 1854670959UL;
+constexpr std::uint32_t ScriptBundle_LoadFromFile = 3339589204UL;
 constexpr std::uint32_t ScriptValidator_Validate = 898639042UL;
 } // namespace Hashes

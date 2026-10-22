@@ -3,8 +3,8 @@ option(RED4EXT_USE_PCH "" ON)
 
 FetchContent_Declare(
   RED4ext.SDK
-  GIT_REPOSITORY  https://github.com/alphanin9/RED4ext.SDK.git
-  GIT_TAG         583f3952f45fc8a3c83f0e18bccfd1ba4ec1c1eb # patch-2.5-compatibility-sdk1.0.0
+  GIT_REPOSITORY  https://github.com/maximegmd/RED4ext.SDK.git
+  GIT_TAG         fd1867297719e26c6fbd54734c7ce82448d32c6f # wopss/RED4ext.SDK#227 (game 2.5), switch back once merged
 )
 FetchContent_MakeAvailable(RED4ext.SDK)
 

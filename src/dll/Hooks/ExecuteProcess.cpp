@@ -174,9 +174,10 @@ bool ExecuteScc(SccApi& scc)
 
     if (settings.SupportsOutputCacheFileParameter())
     {
+        // The engine keeps the path of the unmodified blob: the in-game mod reload matches mod blobs by that file name.
+        // Loads of it are redirected to the modded blob by the LoadScripts and LoadScriptBlob hooks.
         scriptSystem->SetModdedScriptsBlob(moddedCacheFile);
-        engine->scriptsBlobPath = Utils::Narrow(moddedCacheFile.c_str());
-        spdlog::info(L"Scripts blob path was updated to '{}'", moddedCacheFile);
+        spdlog::info(L"Modded scripts blob is set to '{}'", moddedCacheFile);
     }
 
     return true;

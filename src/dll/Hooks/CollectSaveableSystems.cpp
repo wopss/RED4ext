@@ -31,7 +31,7 @@ void _CollectSaveableSystems(void* a1, const RED4ext::DynArray<RED4ext::Handle<R
 
         saveableSystems.PushBack(system);
 
-        if (saveableSystems.size == MaxSaveableSystems)
+        if (saveableSystems.size() == MaxSaveableSystems)
             break;
     }
 
