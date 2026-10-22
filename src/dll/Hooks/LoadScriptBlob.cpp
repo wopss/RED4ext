@@ -13,6 +13,7 @@ bool isAttached = false;
 // uses it to load the base blob from the engine's scripts blob path, which stays the unmodified blob so that mod blobs
 // match it by file name. Loads of the unmodified blob are redirected to the modded one, otherwise the reload would
 // discard everything scc compiled; mod blobs and the scanner's name matching are unaffected.
+
 bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath);
 Hook<decltype(&_ScriptBundle_LoadFromFile)> ScriptBundle_LoadFromFile(Hashes::ScriptBundle_LoadFromFile,
                                                                       &_ScriptBundle_LoadFromFile);
@@ -29,7 +30,11 @@ bool IsUnmodifiedScriptsBlob(const std::filesystem::path& aPath)
         return true;
     }
 
-    return !error ? false : aPath.lexically_normal() == unmodified.lexically_normal();
+    if(!error) {
+        return false;
+    }
+
+    return aPath.lexically_normal() == unmodified.lexically_normal();
 }
 
 bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath)
