@@ -6,12 +6,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(fmt)
 
-set_target_properties(
-  fmt
-    PROPERTIES
-      FOLDER "Dependencies"
-)
-
 mark_as_advanced(
   FMT_CUDA_TEST
   FMT_DEBUG_POSTFIX

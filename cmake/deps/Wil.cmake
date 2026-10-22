@@ -4,7 +4,7 @@ option(WIL_BUILD_TESTS "" OFF)
 FetchContent_Declare(
   WIL
   GIT_REPOSITORY  https://github.com/microsoft/wil.git
-  GIT_TAG         3ecba603d9789435b0661be7b7154d45c195ef98
+  GIT_TAG         a53cc0e55dd754ce43687c3280bc4fece713b678
   EXCLUDE_FROM_ALL # The project does not have any INSTALL options.
 )
 FetchContent_MakeAvailable(WIL)

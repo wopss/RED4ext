@@ -1,7 +1,8 @@
 FetchContent_Declare(
   redscript
   GIT_REPOSITORY  https://github.com/jac3km4/redscript.git
-  GIT_TAG         b413ba6a40098191d18bb24d1a095dd00190322e
+  GIT_TAG         v1.0.0-preview.22
+  GIT_SHALLOW     ON
 )
 FetchContent_MakeAvailable(redscript)
 

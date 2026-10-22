@@ -13,12 +13,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spdlog)
 
-set_target_properties(
-  spdlog
-    PROPERTIES
-      FOLDER "Dependencies"
-)
-
 mark_as_advanced(
   SPDLOG_BUILD_ALL
   SPDLOG_BUILD_BENCH

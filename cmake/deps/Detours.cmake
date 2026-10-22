@@ -1,16 +1,11 @@
 FetchContent_Declare(
   Detours
   GIT_REPOSITORY  https://github.com/microsoft/Detours.git
-  GIT_TAG         9764cebcb1a75940e68fa83d6730ffaf0f669401
+  GIT_TAG         1dbd4ea281d73d478aa8d09a8b83fbd265f715f7
 )
 FetchContent_MakeAvailable(Detours)
 
 add_library(Detours STATIC)
-set_target_properties(
-  Detours
-    PROPERTIES
-      FOLDER "Dependencies"
-)
 
 file(GLOB_RECURSE HEADER_FILES "${detours_SOURCE_DIR}/src/*.h")
 file(GLOB_RECURSE SOURCE_FILES "${detours_SOURCE_DIR}/src/*.cpp")

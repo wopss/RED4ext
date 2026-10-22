@@ -75,14 +75,18 @@ add_link_options(
 # ------------------------------------------------------------------------------
 include(FetchContent)
 
-include("${RED4EXT_CMAKE_DEPS_DIR}/Detours.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/Fmt.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/RED4extSdk.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/Redscript.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/Simdjson.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/Spdlog.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/Toml11.cmake")
-include("${RED4EXT_CMAKE_DEPS_DIR}/Wil.cmake")
+block()
+  set(CMAKE_FOLDER "Dependencies")
+
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Detours.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Fmt.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/RED4extSdk.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Redscript.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Simdjson.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Spdlog.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Toml11.cmake")
+  include("${RED4EXT_CMAKE_DEPS_DIR}/Wil.cmake")
+endblock()
 
 # ------------------------------------------------------------------------------
 # Toolchain settings for this project only
