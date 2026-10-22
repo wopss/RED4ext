@@ -9,10 +9,14 @@ namespace
 {
 bool isAttached = false;
 
-// Loads a script blob from a file into a script bundle. Since patch 2.5 the in-game mod reload (mod.io script mods)
-// uses it to load the base blob from the engine's scripts blob path, which stays the unmodified blob so that mod blobs
-// match it by file name. Loads of the unmodified blob are redirected to the modded one, otherwise the reload would
-// discard everything scc compiled; mod blobs and the scanner's name matching are unaffected.
+// ScriptBundle::LoadFromFile loads a script blob from disk. Since patch 2.5, the game also calls it when reloading
+// mod.io script mods in-game, to reload the base blob from the engine's scripts blob path.
+//
+// That path deliberately still points at the unmodified blob, because the game matches mod blobs to it by file name.
+// The catch is that the reload would then load the vanilla scripts and throw away everything scc compiled.
+//
+// So when the unmodified blob is requested, this hook loads the modded one instead. Everything else, including the
+// mod blobs themselves, loads as usual, and the file name matching still sees the original path.
 
 bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath);
 Hook<decltype(&_ScriptBundle_LoadFromFile)> ScriptBundle_LoadFromFile(Hashes::ScriptBundle_LoadFromFile,
