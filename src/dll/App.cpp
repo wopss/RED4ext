@@ -10,6 +10,7 @@
 #include "Hooks/CollectSaveableSystems.hpp"
 #include "Hooks/ExecuteProcess.hpp"
 #include "Hooks/InitScripts.hpp"
+#include "Hooks/LoadScriptBlob.hpp"
 #include "Hooks/LoadScripts.hpp"
 #include "Hooks/QuickExit.hpp"
 #include "Hooks/ValidateScripts.hpp"
@@ -89,10 +90,10 @@ App::App()
     spdlog::info("Product version: {}.{}{}", productVer.major, productVer.minor, productVer.patch);
     spdlog::info("File version: {}.{}.{}.{}", fileVer.major, fileVer.minor, fileVer.build, fileVer.revision);
 
-    const auto minimumVersion = RED4EXT_V1_RUNTIME_VERSION_2_31;
+    const auto minimumVersion = RED4EXT_V1_RUNTIME_VERSION_2_50;
     if (fileVer < minimumVersion)
     {
-        spdlog::error(L"To use this version of RED4ext, ensure your game is updated to patch 2.31 or newer");
+        spdlog::error(L"To use this version of RED4ext, ensure your game is updated to patch 2.5 or newer");
         return;
     }
 
@@ -127,9 +128,9 @@ void App::Destruct()
     {
         auto success = Hooks::WinMain::Detach() && Hooks::QuickExit::Detach() && Hooks::CGameApplication::Detach() &&
                        Hooks::ExecuteProcess::Detach() && Hooks::InitScripts::Detach() &&
-                       Hooks::LoadScripts::Detach() && Hooks::ValidateScripts::Detach() &&
-                       Hooks::AssertionFailed::Detach() && Hooks::CollectSaveableSystems::Detach() &&
-                       Hooks::gsmState_SessionActive::Detach();
+                       Hooks::LoadScripts::Detach() && Hooks::LoadScriptBlob::Detach() &&
+                       Hooks::ValidateScripts::Detach() && Hooks::AssertionFailed::Detach() &&
+                       Hooks::CollectSaveableSystems::Detach() && Hooks::gsmState_SessionActive::Detach();
         if (success)
         {
             transaction.Commit();
@@ -226,8 +227,9 @@ bool App::AttachHooks() const
 
     auto success = Hooks::WinMain::Attach() && Hooks::QuickExit::Attach() && Hooks::CGameApplication::Attach() &&
                    Hooks::ExecuteProcess::Attach() && Hooks::InitScripts::Attach() && Hooks::LoadScripts::Attach() &&
-                   Hooks::ValidateScripts::Attach() && Hooks::AssertionFailed::Attach() &&
-                   Hooks::CollectSaveableSystems::Attach() && Hooks::gsmState_SessionActive::Attach();
+                   Hooks::LoadScriptBlob::Attach() && Hooks::ValidateScripts::Attach() &&
+                   Hooks::AssertionFailed::Attach() && Hooks::CollectSaveableSystems::Attach() &&
+                   Hooks::gsmState_SessionActive::Attach();
     if (success)
     {
         return transaction.Commit();
