@@ -34,7 +34,7 @@ bool IsUnmodifiedScriptsBlob(const std::filesystem::path& aPath)
         return true;
     }
 
-    if(!error)
+    if (!error)
     {
         return false;
     }
