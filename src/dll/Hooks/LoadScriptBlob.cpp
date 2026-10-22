@@ -20,9 +20,8 @@ Hook<decltype(&_ScriptBundle_LoadFromFile)> ScriptBundle_LoadFromFile(Hashes::Sc
 bool IsUnmodifiedScriptsBlob(const std::filesystem::path& aPath)
 {
     auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
-    const auto unmodified = scriptCompilationSystem->HasScriptsBlob()
-                                ? scriptCompilationSystem->GetScriptsBlob()
-                                : App::Get()->GetPaths()->GetDefaultScriptsBlob();
+    const auto unmodified = scriptCompilationSystem->HasScriptsBlob() ? scriptCompilationSystem->GetScriptsBlob()
+                                                                      : App::Get()->GetPaths()->GetDefaultScriptsBlob();
 
     std::error_code error;
     if (std::filesystem::equivalent(aPath, unmodified, error))
@@ -53,8 +52,7 @@ bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath)
 
 bool Hooks::LoadScriptBlob::Attach()
 {
-    spdlog::trace("Trying to attach the hook for load script blob at {:#x}...",
-                  ScriptBundle_LoadFromFile.GetAddress());
+    spdlog::trace("Trying to attach the hook for load script blob at {:#x}...", ScriptBundle_LoadFromFile.GetAddress());
 
     auto result = ScriptBundle_LoadFromFile.Attach();
     if (result != NO_ERROR)
@@ -77,8 +75,7 @@ bool Hooks::LoadScriptBlob::Detach()
         return false;
     }
 
-    spdlog::trace("Trying to detach the hook for load script blob at {:#x}...",
-                  ScriptBundle_LoadFromFile.GetAddress());
+    spdlog::trace("Trying to detach the hook for load script blob at {:#x}...", ScriptBundle_LoadFromFile.GetAddress());
 
     auto result = ScriptBundle_LoadFromFile.Detach();
     if (result != NO_ERROR)
