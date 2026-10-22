@@ -42,7 +42,7 @@ bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath)
         const auto& moddedBlob = scriptCompilationSystem->GetModdedScriptsBlob();
         spdlog::info(L"Redirecting script blob load from '{}' to '{}'", Utils::Widen(aPath.c_str()), moddedBlob);
 
-        const RED4ext::CString moddedPath(Utils::Narrow(moddedBlob.c_str()).c_str());
+        const RED4ext::CString moddedPath(moddedBlob.string().c_str());
         return ScriptBundle_LoadFromFile(aBundle, moddedPath);
     }
 
