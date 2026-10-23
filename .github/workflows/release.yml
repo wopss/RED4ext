@@ -5,7 +5,9 @@ on:
     types: [published]
 
 permissions:
+  attestations: write
   contents: write
+  id-token: write
 
 env:
   RED4EXT_BUILD_CONFIG: Release
@@ -83,6 +85,15 @@ jobs:
 
           $checksum = $fileHash.Hash
           Add-Content -LiteralPath ${env:GITHUB_ENV} -Encoding UTF8 -Value "RED4EXT_CHECKSUM_SYMBOLS=${checksum}"
+
+      - name: Attest build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            build/install/**/*.dll
+            build/install/**/*.pdb
+            build/install/${{ env.RED4EXT_PACKAGE_NAME }}
+            build/install/${{ env.RED4EXT_PACKAGE_SYMBOLS_NAME }}
 
       - name: Upload assets
         uses: softprops/action-gh-release@v2
