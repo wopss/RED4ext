@@ -18,11 +18,17 @@ bool _CBaseEngine_LoadScripts(RED4ext::CBaseEngine* aEngine, const RED4ext::CStr
                               uint64_t a4)
 {
     auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
-    const auto& scriptsBlobPath =
+    const auto scriptsBlobPath =
         scriptCompilationSystem->HasModdedScriptsBlob() ? scriptCompilationSystem->GetModdedScriptsBlob().string()
         : scriptCompilationSystem->HasScriptsBlob()     ? scriptCompilationSystem->GetScriptsBlob().string()
                                                         : aPath;
 
+    spdlog::trace("_CBaseEngine_LoadScripts: HasScriptsBlob={} HasModdedScriptsBlob={} GetModdedScriptsBlob='{}' GetScriptsBlob='{}'",
+                  scriptCompilationSystem->HasScriptsBlob(), scriptCompilationSystem->HasModdedScriptsBlob(),
+                  scriptCompilationSystem->GetModdedScriptsBlob().string(),
+                  scriptCompilationSystem->GetScriptsBlob().string());
+
+    spdlog::trace("_CBaseEngine_LoadScripts: aPath='{}' scriptsBlobPath='{}'", aPath.c_str(), scriptsBlobPath.c_str());
     return CBaseEngine_LoadScripts(aEngine, scriptsBlobPath, aTimestamp, a4);
 }
 } // namespace
