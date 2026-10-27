@@ -28,6 +28,9 @@ bool IsUnmodifiedScriptsBlob(const std::filesystem::path& aPath)
     const auto unmodified = scriptCompilationSystem->HasScriptsBlob() ? scriptCompilationSystem->GetScriptsBlob()
                                                                       : App::Get()->GetPaths()->GetDefaultScriptsBlob();
 
+    spdlog::trace(L"IsUnmodifiedScriptsBlob: aPath={} unmodified={} HasScriptsBlob={}", aPath.c_str(),
+                  unmodified.c_str(), scriptCompilationSystem->HasScriptsBlob());
+
     std::error_code error;
     if (std::filesystem::equivalent(aPath, unmodified, error))
     {
@@ -47,6 +50,10 @@ bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath)
     spdlog::trace("Loading script blob '{}'", aPath.c_str());
 
     auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
+
+    spdlog::trace(L"_ScriptBundle_LoadFromFile: HasModdedScriptsBlob={} IsUnmodifiedScriptsBlob={}",
+                  scriptCompilationSystem->HasModdedScriptsBlob(), IsUnmodifiedScriptsBlob(aPath.c_str()));
+
     if (scriptCompilationSystem->HasModdedScriptsBlob() && IsUnmodifiedScriptsBlob(aPath.c_str()))
     {
         const auto& moddedBlob = scriptCompilationSystem->GetModdedScriptsBlob();
