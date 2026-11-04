@@ -5,7 +5,10 @@
 #include "Hook.hpp"
 #include "ScriptCompiler/ScriptCompilerSettings.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
+
 #include <windows.h>
+
+#include <exception>
 
 namespace
 {
@@ -29,7 +32,18 @@ bool _Global_ExecuteProcess(void* a1, RED4ext::CString& aCommand, FixedWString& 
     if (sccHandle)
     {
         auto scc = scc_load_api(sccHandle);
-        return ExecuteScc(scc);
+        try
+        {
+            return ExecuteScc(scc);
+        }
+        catch (const std::exception& e)
+        {
+            spdlog::warn("An exception occured while executing 'scc'. Exception: {}", e.what());
+        }
+        catch (...)
+        {
+            spdlog::warn("An unknown exception occured while executing 'scc'");
+        }
     }
 
     spdlog::info(L"Could not load the scc library from '{}', falling back to the CLI", sccLib.native());
