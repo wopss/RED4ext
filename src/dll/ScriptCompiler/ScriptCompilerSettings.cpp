@@ -44,6 +44,8 @@ ScriptCompilerSettings* ScriptCompilerSettings::RegisterMixedRefType(std::string
 
 ScriptCompilerSettings::Result ScriptCompilerSettings::Compile()
 {
+    spdlog::trace("Compiling scc settings...");
+
     auto r6PathStr = m_r6Path.u8string();
     const auto settings = m_scc.settings_new(reinterpret_cast<const char*>(r6PathStr.c_str()));
 
@@ -87,9 +89,12 @@ ScriptCompilerSettings::Result ScriptCompilerSettings::Compile()
         }
     }
 
+    spdlog::trace("Calling native scc compile function");
     auto result = m_scc.compile(settings);
+    auto output = m_scc.get_success(result);
+    spdlog::trace("Compiled result: {}", output == nullptr);
 
-    if (auto output = m_scc.get_success(result))
+    if (output)
     {
         return ScriptCompilerSettings::Result(std::in_place_type<ScriptCompilerOutput>, m_scc, result, output,
                                               ScriptCompilerOutput::Key());
