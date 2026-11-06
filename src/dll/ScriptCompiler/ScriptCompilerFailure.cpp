@@ -7,7 +7,9 @@ ScriptCompilerFailure::ScriptCompilerFailure(SccApi& aApi, SccResult* aResult, K
     RED4EXT_UNUSED_PARAMETER(aKey);
 
     char buffer[256] = {0};
+    spdlog::trace("m_scc.copy_error");
     m_scc.copy_error(aResult, buffer, sizeof(buffer));
+    spdlog::trace("m_scc.copy_error -> done");
 
     std::string errorMessage(buffer);
 
