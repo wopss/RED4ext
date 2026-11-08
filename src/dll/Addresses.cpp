@@ -1,13 +1,13 @@
 #include "Addresses.hpp"
+#include "Utils.hpp"
+
+#include <RED4ext/Relocation.hpp>
+#include <fmt/std.h>
+#include <spdlog/spdlog.h>
 
 #include <ios>
 #include <string>
 #include <string_view>
-
-#include <RED4ext/Relocation.hpp>
-#include <spdlog/spdlog.h>
-
-#include "Utils.hpp"
 
 namespace
 {
@@ -122,7 +122,6 @@ void Addresses::LoadAddresses(const std::filesystem::path& aPath)
             m_addresses.emplace(static_cast<std::uint32_t>(hash), address);
         }
     }
-    
 
     spdlog::info("{} game addresses loaded", m_addresses.size());
 }

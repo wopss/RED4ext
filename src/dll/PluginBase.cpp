@@ -3,6 +3,7 @@
 
 #include <RED4ext/Api/v1/EMainReason.hpp>
 #include <RED4ext/Api/v1/PluginHandle.hpp>
+#include <fmt/std.h>
 #include <spdlog/spdlog.h>
 #include <wil/resource.h>
 

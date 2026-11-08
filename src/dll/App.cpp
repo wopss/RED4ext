@@ -17,6 +17,8 @@
 #include "Hooks/WinMain.hpp"
 #include "Hooks/gsmState_SessionActive.hpp"
 
+#include <fmt/std.h>
+
 namespace
 {
 std::unique_ptr<App> g_app;

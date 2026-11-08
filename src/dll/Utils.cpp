@@ -3,11 +3,32 @@
 #include "DevConsole.hpp"
 #include "Paths.hpp"
 
-#include <ctime>
-#include <cwctype>
-
+#include <RED4ext/GameStates.hpp>
+#include <fmt/format.h>
+#include <fmt/std.h>
+#include <fmt/xchar.h>
+#include <spdlog/common.h>
+#include <spdlog/logger.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+#include <wil/resource.h>
+
+#include <Windows.h>
+
+#include <algorithm>
+#include <cctype>
+#include <chrono>
+#include <cstdint>
+#include <ctime>
+#include <cwctype>
+#include <exception>
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <system_error>
+#include <vector>
 
 std::shared_ptr<spdlog::logger> Utils::CreateLogger(const std::wstring_view aLogName, const std::wstring_view aFilename,
                                                     const Paths& aPaths, const Config& aConfig,
