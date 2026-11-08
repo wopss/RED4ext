@@ -5,6 +5,9 @@
 #include "Systems/ScriptCompilationSystem.hpp"
 #include "Utils.hpp"
 
+#include <fmt/format.h>
+#include <fmt/std.h>
+
 namespace
 {
 bool isAttached = false;
@@ -50,9 +53,9 @@ bool _ScriptBundle_LoadFromFile(void* aBundle, const RED4ext::CString& aPath)
     if (scriptCompilationSystem->HasModdedScriptsBlob() && IsUnmodifiedScriptsBlob(aPath.c_str()))
     {
         const auto& moddedBlob = scriptCompilationSystem->GetModdedScriptsBlob();
-        spdlog::info("Redirecting script blob load from '{}' to '{}'", aPath.c_str(), moddedBlob.string());
+        spdlog::info("Redirecting script blob load from '{}' to '{}'", aPath.c_str(), moddedBlob);
 
-        const RED4ext::CString moddedPath(moddedBlob.string().c_str());
+        const RED4ext::CString moddedPath = fmt::format("{}", moddedBlob);
         return ScriptBundle_LoadFromFile(aBundle, moddedPath);
     }
 

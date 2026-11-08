@@ -56,7 +56,7 @@ void Addresses::LoadAddresses(const std::filesystem::path& aPath)
     spdlog::info(L"Loading game's addresses from '{}'...", aPath);
 
     simdjson::ondemand::parser parser;
-    simdjson::padded_string json = simdjson::padded_string::load(aPath.string());
+    simdjson::padded_string json = simdjson::padded_string::load(aPath.c_str());
     simdjson::ondemand::document document = parser.iterate(json);
 
     simdjson::ondemand::array root;
