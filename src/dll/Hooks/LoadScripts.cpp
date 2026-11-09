@@ -5,6 +5,11 @@
 #include "Hook.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
 
+#include <fmt/format.h>
+#include <fmt/std.h>
+
+#include <string>
+
 namespace
 {
 bool isAttached = false;
@@ -17,13 +22,20 @@ Hook<decltype(&_CBaseEngine_LoadScripts)> CBaseEngine_LoadScripts(Hashes::CBaseE
 bool _CBaseEngine_LoadScripts(RED4ext::CBaseEngine* aEngine, const RED4ext::CString& aPath, uint64_t aTimestamp,
                               uint64_t a4)
 {
-    auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
-    const auto& scriptsBlobPath =
-        scriptCompilationSystem->HasModdedScriptsBlob() ? scriptCompilationSystem->GetModdedScriptsBlob().string()
-        : scriptCompilationSystem->HasScriptsBlob()     ? scriptCompilationSystem->GetScriptsBlob().string()
-                                                        : aPath;
+    const auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
 
-    return CBaseEngine_LoadScripts(aEngine, scriptsBlobPath, aTimestamp, a4);
+    if (scriptCompilationSystem->HasModdedScriptsBlob())
+    {
+        const RED4ext::CString blobBath = fmt::format("{}", scriptCompilationSystem->GetModdedScriptsBlob());
+        return CBaseEngine_LoadScripts(aEngine, blobBath, aTimestamp, a4);
+    }
+    else if (scriptCompilationSystem->HasScriptsBlob())
+    {
+        const RED4ext::CString blobBath = fmt::format("{}", scriptCompilationSystem->GetScriptsBlob());
+        return CBaseEngine_LoadScripts(aEngine, blobBath, aTimestamp, a4);
+    }
+
+    return CBaseEngine_LoadScripts(aEngine, aPath, aTimestamp, a4);
 }
 } // namespace
 
