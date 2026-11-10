@@ -5,7 +5,10 @@
 #include "Hook.hpp"
 #include "ScriptCompiler/ScriptCompilerSettings.hpp"
 #include "Systems/ScriptCompilationSystem.hpp"
-#include <windows.h>
+
+#include <fmt/std.h>
+
+#include <Windows.h>
 
 namespace
 {

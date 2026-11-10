@@ -2,6 +2,7 @@
 #include "Paths.hpp"
 #include "Utils.hpp"
 
+#include <fmt/std.h>
 #include <spdlog/common.h>
 #include <toml11/find.hpp>
 #include <toml11/parser.hpp>

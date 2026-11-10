@@ -6,6 +6,7 @@
 #include "Utils.hpp"
 
 #include <fmt/format.h>
+#include <fmt/std.h>
 #include <fmt/xchar.h>
 #include <spdlog/spdlog.h>
 

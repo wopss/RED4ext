@@ -1,13 +1,13 @@
 #include "Addresses.hpp"
+#include "Utils.hpp"
+
+#include <RED4ext/Relocation.hpp>
+#include <fmt/std.h>
+#include <spdlog/spdlog.h>
 
 #include <ios>
 #include <string>
 #include <string_view>
-
-#include <RED4ext/Relocation.hpp>
-#include <spdlog/spdlog.h>
-
-#include "Utils.hpp"
 
 namespace
 {
@@ -56,7 +56,7 @@ void Addresses::LoadAddresses(const std::filesystem::path& aPath)
     spdlog::info(L"Loading game's addresses from '{}'...", aPath);
 
     simdjson::ondemand::parser parser;
-    simdjson::padded_string json = simdjson::padded_string::load(aPath.string());
+    simdjson::padded_string json = simdjson::padded_string::load(aPath.c_str());
     simdjson::ondemand::document document = parser.iterate(json);
 
     simdjson::ondemand::array root;
@@ -122,7 +122,6 @@ void Addresses::LoadAddresses(const std::filesystem::path& aPath)
             m_addresses.emplace(static_cast<std::uint32_t>(hash), address);
         }
     }
-    
 
     spdlog::info("{} game addresses loaded", m_addresses.size());
 }

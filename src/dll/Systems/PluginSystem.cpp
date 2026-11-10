@@ -16,6 +16,7 @@
 #include <RED4ext/Api/v1/Version.hpp>
 
 #include <fmt/format.h>
+#include <fmt/std.h>
 #include <spdlog/spdlog.h>
 #include <wil/resource.h>
 

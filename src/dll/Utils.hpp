@@ -64,16 +64,6 @@ void ShowLastErrorMessage(uint32_t aType, const std::wstring_view aAdditionalTex
 }
 } // namespace Utils
 
-template<typename Char>
-struct fmt::formatter<std::filesystem::path, Char> : formatter<basic_string_view<Char>, Char>
-{
-    template<typename FormatContext>
-    auto format(const std::filesystem::path& path, FormatContext& ctx) const
-    {
-        return formatter<basic_string_view<Char>, Char>::format(path.c_str(), ctx);
-    }
-};
-
 #ifndef SHOW_LAST_ERROR_MESSAGE_FILE_LINE
 #define SHOW_LAST_ERROR_MESSAGE_FILE_LINE(additionalText, ...)                                                         \
     Utils::ShowLastErrorMessage(MB_ICONWARNING | MB_OK, additionalText L"\n\n{}:{}", ##__VA_ARGS__, TEXT(__FILE__),    \
