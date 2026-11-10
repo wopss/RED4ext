@@ -161,7 +161,7 @@ std::wstring ScriptCompilationSystem::GetCompilationArgs(const FixedWString& aOr
     spdlog::info(L"Paths written to: '{}'", pathsFilePath);
     fmt::format_to(std::back_inserter(buffer), LR"( -compilePathsFile "{}")", pathsFilePath);
 
-    return fmt::to_wstring(buffer);
+    return {buffer.data(), buffer.size()};
 }
 
 const ScriptCompilationSystem::Map_t& ScriptCompilationSystem::GetScriptPaths() const
