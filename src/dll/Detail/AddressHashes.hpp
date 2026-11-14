@@ -3,7 +3,7 @@
 
 namespace Hashes
 {
-constexpr std::uint32_t WinMain = 240386859ul;
+constexpr std::uint32_t wWinMainCRTStartup = 1099040519ul;
 constexpr std::uint32_t QuickExit = 388826167ul;
 
 constexpr std::uint32_t AssertionFailed = 4285205681UL;

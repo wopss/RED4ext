@@ -14,8 +14,8 @@
 #include "Hooks/LoadScripts.hpp"
 #include "Hooks/QuickExit.hpp"
 #include "Hooks/ValidateScripts.hpp"
-#include "Hooks/WinMain.hpp"
 #include "Hooks/gsmState_SessionActive.hpp"
+#include "Hooks/wWinMainCRTStartup.hpp"
 
 #include <fmt/std.h>
 
@@ -128,11 +128,11 @@ void App::Destruct()
     DetourTransaction transaction;
     if (transaction.IsValid())
     {
-        auto success = Hooks::WinMain::Detach() && Hooks::QuickExit::Detach() && Hooks::CGameApplication::Detach() &&
-                       Hooks::ExecuteProcess::Detach() && Hooks::InitScripts::Detach() &&
-                       Hooks::LoadScripts::Detach() && Hooks::LoadScriptBlob::Detach() &&
-                       Hooks::ValidateScripts::Detach() && Hooks::AssertionFailed::Detach() &&
-                       Hooks::CollectSaveableSystems::Detach() && Hooks::gsmState_SessionActive::Detach();
+        auto success =
+            Hooks::wWinMainCRTStartup::Detach() && Hooks::QuickExit::Detach() && Hooks::CGameApplication::Detach() &&
+            Hooks::ExecuteProcess::Detach() && Hooks::InitScripts::Detach() && Hooks::LoadScripts::Detach() &&
+            Hooks::LoadScriptBlob::Detach() && Hooks::ValidateScripts::Detach() && Hooks::AssertionFailed::Detach() &&
+            Hooks::CollectSaveableSystems::Detach() && Hooks::gsmState_SessionActive::Detach();
         if (success)
         {
             transaction.Commit();
