@@ -21,6 +21,9 @@ BOOL APIENTRY DllMain(HMODULE aModule, DWORD aReason, LPVOID aReserved)
             }
 
             App::Construct();
+
+            App* app = App::Get();
+            app->Startup();
         }
         catch (const std::exception& e)
         {

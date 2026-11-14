@@ -13,20 +13,20 @@ Hook<decltype(&WinMain_fnc)> _WinMain(Hashes::WinMain, &WinMain_fnc);
 
 int WINAPI WinMain_fnc(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-    try
-    {
-        auto app = App::Get();
-        app->Startup();
-    }
-    catch (const std::exception& e)
-    {
-        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An exception occurred while RED4ext was starting up.\n\n{}",
-                                            Utils::Widen(e.what()));
-    }
-    catch (...)
-    {
-        SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An unknown exception occurred while RED4ext was starting up.");
-    }
+    //try
+    //{
+    //    auto app = App::Get();
+    //    app->Startup();
+    //}
+    //catch (const std::exception& e)
+    //{
+    //    SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An exception occurred while RED4ext was starting up.\n\n{}",
+    //                                        Utils::Widen(e.what()));
+    //}
+    //catch (...)
+    //{
+    //    SHOW_MESSAGE_BOX_AND_EXIT_FILE_LINE("An unknown exception occurred while RED4ext was starting up.");
+    //}
 
     return _WinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 }
