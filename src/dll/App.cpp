@@ -227,11 +227,11 @@ bool App::AttachHooks() const
         return false;
     }
 
-    auto success = Hooks::WinMain::Attach() && Hooks::QuickExit::Attach() && Hooks::CGameApplication::Attach() &&
-                   Hooks::ExecuteProcess::Attach() && Hooks::InitScripts::Attach() && Hooks::LoadScripts::Attach() &&
-                   Hooks::LoadScriptBlob::Attach() && Hooks::ValidateScripts::Attach() &&
-                   Hooks::AssertionFailed::Attach() && Hooks::CollectSaveableSystems::Attach() &&
-                   Hooks::gsmState_SessionActive::Attach();
+    auto success = Hooks::wWinMainCRTStartup::Attach() && Hooks::QuickExit::Attach() &&
+                   Hooks::CGameApplication::Attach() && Hooks::ExecuteProcess::Attach() &&
+                   Hooks::InitScripts::Attach() && Hooks::LoadScripts::Attach() && Hooks::LoadScriptBlob::Attach() &&
+                   Hooks::ValidateScripts::Attach() && Hooks::AssertionFailed::Attach() &&
+                   Hooks::CollectSaveableSystems::Attach() && Hooks::gsmState_SessionActive::Attach();
     if (success)
     {
         return transaction.Commit();
