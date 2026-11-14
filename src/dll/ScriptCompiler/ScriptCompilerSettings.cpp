@@ -59,11 +59,9 @@ ScriptCompilerSettings::Result ScriptCompilerSettings::Compile()
         m_scc.settings_set_output_cache_file(settings, reinterpret_cast<const char*>(outputCacheFileStr.c_str()));
     }
 
-    spdlog::info("{} script settings paths", m_scriptPaths.size());
     for (const auto& path : m_scriptPaths)
     {
         auto pathStr = path.u8string();
-        spdlog::info("settings_add_script_path: {}", reinterpret_cast<const char*>(pathStr.c_str()));
         m_scc.settings_add_script_path(settings, reinterpret_cast<const char*>(pathStr.c_str()));
     }
 
