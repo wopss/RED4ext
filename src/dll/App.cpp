@@ -10,9 +10,9 @@
 #include "Hooks/CollectSaveableSystems.hpp"
 #include "Hooks/ExecuteProcess.hpp"
 #include "Hooks/InitScripts.hpp"
-#include "Hooks/LoadScriptBlob.hpp"
 #include "Hooks/LoadScripts.hpp"
 #include "Hooks/QuickExit.hpp"
+#include "Hooks/Script_GetBlobName.hpp"
 #include "Hooks/ValidateScripts.hpp"
 #include "Hooks/WinMain.hpp"
 #include "Hooks/gsmState_SessionActive.hpp"
@@ -129,8 +129,8 @@ void App::Destruct()
     if (transaction.IsValid())
     {
         auto success = Hooks::WinMain::Detach() && Hooks::QuickExit::Detach() && Hooks::CGameApplication::Detach() &&
-                       Hooks::ExecuteProcess::Detach() && Hooks::InitScripts::Detach() &&
-                       Hooks::LoadScripts::Detach() && Hooks::LoadScriptBlob::Detach() &&
+                       Hooks::ExecuteProcess::Detach() && Hooks::Script_GetBlobName::Detach() &&
+                       Hooks::InitScripts::Detach() && Hooks::LoadScripts::Detach() &&
                        Hooks::ValidateScripts::Detach() && Hooks::AssertionFailed::Detach() &&
                        Hooks::CollectSaveableSystems::Detach() && Hooks::gsmState_SessionActive::Detach();
         if (success)
@@ -228,8 +228,8 @@ bool App::AttachHooks() const
     }
 
     auto success = Hooks::WinMain::Attach() && Hooks::QuickExit::Attach() && Hooks::CGameApplication::Attach() &&
-                   Hooks::ExecuteProcess::Attach() && Hooks::InitScripts::Attach() && Hooks::LoadScripts::Attach() &&
-                   Hooks::LoadScriptBlob::Attach() && Hooks::ValidateScripts::Attach() &&
+                   Hooks::ExecuteProcess::Attach() && Hooks::Script_GetBlobName::Attach() &&
+                   Hooks::InitScripts::Attach() && Hooks::LoadScripts::Attach() && Hooks::ValidateScripts::Attach() &&
                    Hooks::AssertionFailed::Attach() && Hooks::CollectSaveableSystems::Attach() &&
                    Hooks::gsmState_SessionActive::Attach();
     if (success)
