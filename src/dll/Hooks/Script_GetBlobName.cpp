@@ -22,7 +22,31 @@ const char* _GetBlobName(std::uint8_t a1)
     auto scriptCompilationSystem = App::Get()->GetScriptCompilationSystem();
     if (scriptCompilationSystem->HasModdedScriptsBlob())
     {
-        return "final.redscripts.modded";
+        spdlog::info("Redirecting the script blob file name to its '.modded' variant");
+
+        switch (a1)
+        {
+        case 0:
+        {
+            return "master.redscripts.modded";
+        }
+        case 2:
+        {
+            return "profiling.redscripts.modded";
+        }
+        case 8:
+        {
+            return "final.redscripts.modded";
+        }
+        case 16:
+        {
+            return "final_noopts.redscripts.modded";
+        }
+        default:
+        {
+            return "final.redscripts.modded";
+        }
+        }
     }
 
     return GetBlobName(a1);
